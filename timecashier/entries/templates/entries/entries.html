@@ -1,0 +1,12 @@
+{% extends "main/base.html" %}
+
+{% block title %}Wpisy{% endblock %}
+{% block content %}
+<h1>Lista wpisów</h1>
+<table>
+    <thead><th>Klient</th><th>Czas rozpoczęcia</th><th>Czas zakończenia</th></thead>
+    {% for entry in entries_list %}
+      <tr><td>{{ entry.client.name }}</td><td>{{ entry.start }}</td><td>{{ entry.end }}</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

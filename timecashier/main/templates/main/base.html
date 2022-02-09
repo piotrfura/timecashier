@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} | TimeCashier</title>
+</head>
+<body>
+<header>TIMECASHIER APP</header>
+{% load static %}
+<img src="{% static 'images/timecashier_logo.png' %}" alt="TimeCashier"  style="max-width: 10%; height: auto;">
+
+{% block content %}
+{% endblock %}
+
+<footer>TimeCashier 2022</footer>
+</body>
+</html>

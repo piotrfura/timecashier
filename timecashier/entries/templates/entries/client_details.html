@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+
+{% block title %}Szczegóły klienta{% endblock %}
+
+{% block content %}
+<h1>{{ client.name }}</h1>
+<div>
+    <small>Utworzono: {{ client.created }}, zmodyfikowano: {{ client.modified }}</small>
+</div>
+<div>
+    <br>
+    <a href= '{{ client_link }}' target="_blank">Zobacz na mapie</a>
+</div>
+{% endblock %}

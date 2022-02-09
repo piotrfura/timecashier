@@ -1,9 +1,8 @@
 from django.urls import path
-from .views import show_clients, show_entries, show_client1
+from .views import clients_list, entries_list, client_details
 
 urlpatterns = [
-    path('clients/', show_clients),
-    path('entries/', show_entries),
-    path('clients/1/', show_client1)
-
+    path('clients/', clients_list),
+    path('entries/', entries_list),
+    path('clients/<int:client_id>/', client_details)
 ]

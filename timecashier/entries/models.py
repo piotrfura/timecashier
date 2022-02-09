@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.timezone import make_aware, get_current_timezone
+from datetime import datetime
 
 # Create your models here.
 
@@ -8,14 +10,17 @@ class Client(models.Model):
     longitude = models.DecimalField(max_digits=10, decimal_places=7)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.name} {self.longitude} {self.latitude} {self.created} {self.modified}'
 
 class Entry(models.Model):
-    start = models.DateTimeField(auto_now_add=True)
-    end = models.DateTimeField(auto_now=True)
+    start = models.DateTimeField(auto_now_add=True) #default=make_aware(datetime.now(), get_current_timezone()))
+    end = models.DateTimeField(blank=True, null=True)
     client = models.ForeignKey(Client, on_delete = models.SET_NULL, null=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.client} {self.start} {self.end}'

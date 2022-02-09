@@ -1,34 +1,25 @@
-# from django.shortcuts import render
+from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 from .models import Client, Entry
 
 
 # Create your views here.
 
-def show_clients(request):
-    html = """<ul>"""
-    for client in Client.objects.all():
-        html += f"<li>{client}</li>"
-    html += "</ul>"
-    return HttpResponse(html)
+def clients_list(request):
+    clients = Client.objects.all()
+    context = {'clients_list': clients}
+    return render(request, "entries/clients.html", context)
 
 
-def show_client1(request):
-    client = Client.objects.first()
-    html = f"""<h2>{client.name}</h2>"""
-    html += f'''<div>
-            <small>Utworzono: {client.created}, zmodyfikowano: {client.modified}</small>
-        </div>
-        <div>
-            <p>Nazwa Klienta: {client.name}</p>
-        </div>'''
-    return HttpResponse(html)
+def entries_list(request):
+    entries = Entry.objects.all()
+    context = {'entries_list': entries}
+    return render(request, "entries/entries.html", context)
 
 
-def show_entries(request):
-    html = """<ul>"""
-    for entry in Entry.objects.all():
-        html += f"<li>{entry}</li>"
-    html += "</ul>"
-    return HttpResponse(html)
-
+def client_details(request, client_id):
+    client = Client.objects.get(pk=client_id)
+    client_link = f'http://maps.google.com/maps?q= {client.latitude},{client.longitude}'
+    context = {'client': client, 'client_link': client_link}
+    return render(request, "entries/client_details.html", context)

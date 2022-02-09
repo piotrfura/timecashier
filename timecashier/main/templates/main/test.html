@@ -1,0 +1,25 @@
+{% extends "main/base.html" %}
+{% load entries_extras %}
+
+{% block title %}Test{% endblock %}
+
+{% block content %}
+
+<h1>Strona testowa</h1>
+
+<ol><b>Lista zadań</b>
+    {% for task in tasks %}
+        <li>{{ task }}</li>
+    {% endfor %}
+</ol>
+
+<p>{{ text }}</p>
+
+<ol><b>Znajomość języków programowania</b>
+    {% for language, level in languages.items %}
+        <li>Język: {{ language }} - poziom: {{ level }}<br><small>liczba znaków: {% count_signs language %}</small></li>
+    {% endfor %}
+</ol>
+
+{% lorem %}
+{% endblock %}
