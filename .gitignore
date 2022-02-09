@@ -1,0 +1,4 @@
+.idea/
+pywwwenv/
+__pycache__
+db.sqlite3
