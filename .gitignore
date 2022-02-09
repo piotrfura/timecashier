@@ -2,3 +2,4 @@
 pywwwenv/
 __pycache__
 db.sqlite3
+fixtures/
