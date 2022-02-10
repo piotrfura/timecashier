@@ -23,3 +23,6 @@ def client_details(request, client_id):
     client_link = f'http://maps.google.com/maps?q= {client.latitude},{client.longitude}'
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
+
+def whereami(request):
+    return render(request, "entries/whereami.html")
