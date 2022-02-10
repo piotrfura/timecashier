@@ -6,11 +6,22 @@
 {% block title %}Wpisy{% endblock %}
 
 {% block content %}
-<h1>Lista wpisów</h1>
-<table>
+<h1>Wpisy</h1>
+<table id="table_entries">
     <thead><th>Klient</th><th>Czas rozpoczęcia</th><th>Czas zakończenia</th></thead>
+    <tbody>
     {% for entry in entries_list %}
       <tr><td>{{ entry.client.name }}</td><td>{{ entry.start }}</td><td>{{ entry.end }}</td></tr>
     {% endfor %}
+    </tbody>
 </table>
+<script>
+let table = new DataTable('#table_entries', {
+    "pageLength":15,
+    dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'print'
+        ]
+});
+</script>
 {% endblock %}

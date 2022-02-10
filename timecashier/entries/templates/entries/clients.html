@@ -1,16 +1,24 @@
 {% extends "main/base.html" %}
 
 {% load static %}
-{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
+{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block title %}Klienci{% endblock %}
 
 {% block content %}
-<h1>Lista klientów</h1>
-<table>
+<h1>Klienci</h1>
+<table id="table_clients">
     <thead><th>Lp.</th><th>Nazwa</th><th>Szerokość geograficzna</th><th>Długość geograficzna</th><th>Data dodania</th></thead>
+    <tbody>
     {% for client in clients_list %}
     <tr><td>{{ client.id }}.</td><td><a href="{% url 'entries:client_details' client.id %}">{% if client.active %} (nieaktywny) {% endif %} {{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
     {% endfor %}
+    </tbody>
 </table>
+<script>
+let table = new DataTable('#table_clients', {
+    "pageLength":15
+});
+</script>
 {% endblock %}
