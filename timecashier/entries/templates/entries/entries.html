@@ -1,6 +1,10 @@
 {% extends "main/base.html" %}
 
+{% load static %}
+{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
+
 {% block title %}Wpisy{% endblock %}
+
 {% block content %}
 <h1>Lista wpisów</h1>
 <table>

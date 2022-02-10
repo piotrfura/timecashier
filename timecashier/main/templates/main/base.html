@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% load static %}
+    <link href="{% static 'main/css/style.css' %}" rel="stylesheet">
+    {% block style %}{% endblock %}
     <title>{% block title %}{% endblock %} | TimeCashier</title>
+
 </head>
 <body>
 <header>
-    {% load static %}
     <a href="/"><img src="{% static 'images/timecashier_logo.png' %}" alt="TimeCashier"  style="max-width: 10%; height: auto;"></a>
     TIMECASHIER APP
     <br>
@@ -20,3 +23,4 @@
 <footer>TimeCashier 2022 <a href="{% url 'main:about' %}">About</a></footer>
 </body>
 </html>
+

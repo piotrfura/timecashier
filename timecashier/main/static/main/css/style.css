@@ -1,0 +1,18 @@
+body {
+    background-color: rgba(32,33,36,255);
+    color: white;
+}
+h1 {
+    color: white;
+    text-align: left;
+}
+p {
+    font-family: verdana;
+    font-size: 20px;
+}
+a {
+    color: white;
+}
+a:hover {
+    color: #1967d2;
+}
