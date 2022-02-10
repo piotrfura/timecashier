@@ -1,8 +1,10 @@
 from django.urls import path
 from .views import clients_list, entries_list, client_details
 
+app_name = 'entries'
+
 urlpatterns = [
-    path('clients/', clients_list),
-    path('entries/', entries_list),
-    path('clients/<int:client_id>/', client_details)
+    path('clients/', clients_list, name='clients'),
+    path('entries/', entries_list, name='entries'),
+    path('clients/<int:client_id>/', client_details, name='client_details')
 ]

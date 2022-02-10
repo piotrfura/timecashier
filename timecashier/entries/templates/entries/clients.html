@@ -7,7 +7,7 @@
 <table>
     <thead><th>Lp.</th><th>Nazwa</th><th>Szerokość geograficzna</th><th>Długość geograficzna</th><th>Data dodania</th></thead>
     {% for client in clients_list %}
-    <tr><td>{{ client.id }}.</td><td><a href="/clients/{{ client.id }}">{% if client.active %} (nieaktywny) {% endif %} {{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
+    <tr><td>{{ client.id }}.</td><td><a href="{% url 'entries:client_details' client.id %}">{% if client.active %} (nieaktywny) {% endif %} {{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
     {% endfor %}
 </table>
 {% endblock %}
