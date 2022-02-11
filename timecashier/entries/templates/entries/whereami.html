@@ -3,13 +3,18 @@
 {% load static %}
 {% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
 
+
+
 {% block title %}Gdzie jestem{% endblock %}
 {% block content %}
 <h1>Gdzie jestem?</h1>
+
 <p class="status"></p>
+<a class="mapslink" target="_blank"></a><br>
 
 <button class="find-location">Sprawdź lokalizację</button>
 <script src="{% static 'entries/js/findme.js' %}"></script>
 
-<p></p>
+
+
 {% endblock %}

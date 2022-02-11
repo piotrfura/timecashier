@@ -1,8 +1,12 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {% block title %}O aplikacji{% endblock %}
 {% block content %}
 <h1>O aplikacji</h1>
+
+<img src="{% static 'images/timecashier_logo.png' %}" alt="TimeCashier"  style="max-width: 15%; height: auto;">
+
 <p>Aplikacja służy do zliczania czasu pracy na podstawie lokalizacji użytkownika.</p>
 <ol><b>Lista funkcjonalności w trakcie przygotowania:</b>
     <li>Pobieranie lokalizacji z przegladarki z wykorzystaniem JS</li>

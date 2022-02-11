@@ -133,3 +133,5 @@ STATICFILES_DIR = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SHELL_PLUS_PRINT_SQL = True
+
+SECURE_SSL_REDIRECT = False
