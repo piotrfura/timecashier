@@ -15,8 +15,8 @@ from .models import Entry
 class ClientAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "latitude", "longitude", "user","created", "modified", "active"]
     search_fields = ["name"]
-    list_filter = ["name", "active"]
-
+    list_filter = ["user", "active"]
+    prepopulated_fields = {"slug": ("name",)}
 
 class EntryResource(resources.ModelResource):
     class Meta:
@@ -28,6 +28,6 @@ class EntryAdmin(ExportMixin, admin.ModelAdmin):
     # list_display = [field.name for field in Entry._meta.get_fields()]
     list_display = ["id", "start", "end", "client", "user", "created", "modified", "active"]
     search_fields = ["client"]
-    list_filter = ["client", "active", "user"]
+    list_filter = ["client", "user", "active"]
     resource_class = EntryResource
     pass

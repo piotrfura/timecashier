@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import make_aware, get_current_timezone
 from datetime import datetime, date, timedelta
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -31,9 +32,15 @@ class Client(Timestamped):
     longitude = models.DecimalField(max_digits=10, decimal_places=7)
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="clients")
     active = models.BooleanField(default=True)
+    slug = models.SlugField(max_length=100, unique=True)
 
     def __str__(self):
         return f'{self.name}'# {self.longitude} {self.latitude} {self.created} {self.modified}'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Client, self).save(*args, **kwargs)
 
 
 class Entry(Timestamped):

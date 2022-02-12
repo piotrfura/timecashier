@@ -18,8 +18,8 @@ def entries_list(request):
     return render(request, "entries/entries.html", context)
 
 
-def client_details(request, client_id):
-    client = Client.objects.get(pk=client_id)
+def client_details(request, client_slug):
+    client = Client.objects.get(slug=client_slug)
     client_link = f'http://maps.google.com/maps?q= {client.latitude},{client.longitude}'
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
