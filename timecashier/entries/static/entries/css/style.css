@@ -7,5 +7,5 @@ table.dataTable tbody tr {
 }
 
 table.dataTable tbody tr:nth-child(odd) {background-color: grey;}
-
+table.dataTable tr:hover {color: #1967d2;}
 */

@@ -9,7 +9,7 @@ from .models import Entry
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "latitude", "longitude", "created", "modified", "active"]
+    list_display = ["id", "name", "latitude", "longitude", "user","created", "modified", "active"]
     search_fields = ["name"]
     list_filter = ["name", "active"]
 

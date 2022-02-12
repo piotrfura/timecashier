@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # project apps
     'entries.apps.EntriesConfig',
     'main.apps.MainConfig',
+    'tags.apps.TagsConfig',
 ]
 
 MIDDLEWARE = [
