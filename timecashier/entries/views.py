@@ -26,3 +26,4 @@ def client_details(request, client_id):
 
 def whereami(request):
     return render(request, "entries/whereami.html")
+

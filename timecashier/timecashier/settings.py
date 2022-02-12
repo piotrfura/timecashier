@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 3rd party
     'django_extensions',
+    'import_export',
     # project apps
     'entries.apps.EntriesConfig',
     'main.apps.MainConfig',
