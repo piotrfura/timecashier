@@ -1,10 +1,23 @@
 from django.shortcuts import render
 #from django.http import HttpResponse
+from entries.models import Client, Entry
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'main/index.html')
+    clients_dist = {}
+    clients = Client.objects.all()
+
+    lat_user = 52.25423113363622
+    long_user = 21.01019839502938
+
+    for client in clients:
+        length = abs(((float(client.longitude) - long_user) ** 2 + (float(client.latitude) - lat_user) ** 2) ** (0.5))
+        clients_dist[client] = length
+    min_dist = min(clients_dist.values())
+    nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist]
+    context = {"nearest_client": nearest_client}
+    return render(request, 'main/index.html', context)
 
 def about(request):
     return render(request, 'main/about.html')

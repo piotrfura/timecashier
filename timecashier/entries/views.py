@@ -14,6 +14,8 @@ def clients_list(request):
 
 def entries_list(request):
     entries = Entry.objects.all()
+
+
     context = {'entries_list': entries}
     return render(request, "entries/entries.html", context)
 
