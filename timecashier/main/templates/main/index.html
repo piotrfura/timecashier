@@ -5,4 +5,24 @@
 {% block content %}
 <h2>Dashboard</h2>
 <p>Jesteś w pobliżu {{ nearest_client }}</p>
+<div class="row">
+<form method="POST">
+{% csrf_token %}
+    <label for="start_time">Start:</label><br>
+    <input type="datetime-local" id="start_time" name="start_time"><br>
+    <label for="end_time">Koniec:</label><br>
+    <input type="datetime-local" id="end_time" name="end_time"><br>
+    <label for="id_client">Klient (na podstawie lokalizacji):</label><br>
+    <select name="client" id="id_client"  value="{{ nearest_client }}">
+        {% for client in clients_list %}
+        {% if client.id == nearest_client.id %}
+        <option value="{{ client.id }}" selected>{{ client.name }}</option>
+        {% else %}
+        <option value="{{ client.id }}">{{ client.name }}</option>
+        {% endif %}
+        {% endfor %}
+    </select><br>
+    <button class="btn btn btn-secondary" type="submit">DODAJ</button>
+</form>
+</div>
 {% endblock %}

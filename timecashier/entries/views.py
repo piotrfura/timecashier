@@ -13,7 +13,7 @@ def clients_list(request):
 
 
 def entries_list(request):
-    entries = Entry.objects.all()
+    entries = Entry.objects.all().order_by("-created")
 
 
     context = {'entries_list': entries}

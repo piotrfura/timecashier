@@ -16,7 +16,14 @@ def index(request):
         clients_dist[client] = length
     min_dist = min(clients_dist.values())
     nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
-    context = {"nearest_client": nearest_client}
+    context = {"nearest_client": nearest_client, "clients_list": clients}
+
+    if request.method == "POST":
+        data = {
+            "client": request.POST['client'],
+        }
+        entry_client = Client.objects.get(pk=data["client"])
+        entry = Entry.objects.create(client=entry_client)
     return render(request, 'main/index.html', context)
 
 def about(request):
