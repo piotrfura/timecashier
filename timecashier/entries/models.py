@@ -33,6 +33,7 @@ class Client(Timestamped):
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="clients")
     active = models.BooleanField(default=True)
     slug = models.SlugField(max_length=100, unique=True)
+    logo = models.ImageField(upload_to='entries/logos/', blank=True, null=True)
 
     def __str__(self):
         return f'{self.name}'# {self.longitude} {self.latitude} {self.created} {self.modified}'
