@@ -19,11 +19,14 @@ def index(request):
         # }
         # entry = Entry.objects.create(**data)
 
-        form = NewEntryForm(data=request.POST)
+        form = NewEntryForm(request.POST)
         if form.is_valid():
-            services.save_entry(form.cleaned_data)
-            return HttpResponseRedirect(reverse("index"))
+            form.cleaned_data['user'] = request.user
+            form.cleaned_data['client'] = Client.objects.get(id=form.cleaned_data['client'])
+            entry = Entry.objects.create(**form.cleaned_data)
+            return HttpResponseRedirect(reverse("main:index"))
     else:
+        form = NewEntryForm()
 
         clients_dist = {}
         clients = Client.objects.all()
@@ -40,7 +43,6 @@ def index(request):
 
         active_entries = Entry.objects.filter(end__isnull=True)
 
-        form = NewEntryForm()
 
     context = {
             "nearest_client": nearest_client,

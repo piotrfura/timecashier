@@ -9,32 +9,9 @@
 <h2>Dashboard</h2>
 <p>Jesteś w pobliżu {{ nearest_client }}</p>
 <div class="row" style="margin-top: 30px; padding: 10px;">
-<form method="POST">
-{% csrf_token %}
-    <label for="start">Start:</label><br>
-    <input type="datetime-local" id="start" name="start"><br>
-
-    <label for="end">Koniec:</label><br>
-    <input type="datetime-local" id="end" name="end"><br>
-
-    <label for="id_client">Klient (na podstawie lokalizacji):</label><br>
-    <select name="client" id="id_client"  value="{{ nearest_client }}">
-        {% for client in clients_list %}
-        {% if client.id == nearest_client.id %}
-        <option value="{{ client.id }}" selected>{{ client.name }}</option>
-        {% else %}
-        <option value="{{ client.id }}">{{ client.name }}</option>
-        {% endif %}
-        {% endfor %}
-    </select><br>
-
-    <button class="btn btn btn-primary" type="submit">DODAJ</button>
-</form>
 </div>
 <div class="row border" style="margin-top: 30px; padding: 10px;">
-<form>
-    {% crispy form form.helper %}
-</form>
+{% crispy form  %}
 </div>
 <div class="row" style="margin-top: 30px; padding: 10px;">
     <h4>Aktywne zadania</h4>
@@ -49,7 +26,7 @@
     <script>
 let table = new DataTable('#table_active_entries', {
     "pageLength":5,
-    "order": [[ 0, "asc" ]],
+    "order": [[ 1, "desc" ]],
     "searching": false,
     "paging": true,
     "info": false,

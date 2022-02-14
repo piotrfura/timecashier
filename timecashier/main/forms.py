@@ -10,20 +10,20 @@ class NewEntryForm(forms.Form):
     end = forms.DateTimeField(label="Koniec", required=False)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args,**kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.form_action = 'contact'
+        # self.helper.form_action = 'contact'
         self.helper.layout = Layout(
             Fieldset(
                 '',
                 'client',
                 'start',
-                'end',
+                'end'
             ),
             ButtonHolder(
                 Submit('submit', 'DODAJ', css_class='btn btn-primary'),
                 css_class="d-flex justify-content-end"
-            )
+            ),
         )
 
