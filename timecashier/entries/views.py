@@ -13,9 +13,7 @@ def clients_list(request):
 
 
 def entries_list(request):
-    entries = Entry.objects.all().order_by("-created")
-
-
+    entries = Entry.objects.all().filter(user=request.user).order_by("-created")
     context = {'entries_list': entries}
     return render(request, "entries/entries.html", context)
 

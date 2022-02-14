@@ -50,7 +50,15 @@ class Entry(Timestamped):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, related_name="entries")
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="entries")
     active = models.BooleanField(default=True)
-    tags = models.ManyToManyField("tags.Tag", related_name="entries")
+    tags = models.ManyToManyField("tags.Tag", related_name="entries", blank=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_end_gte_start",
+                check=models.Q(end__gte=models.F("start")),
+            )
+        ]
 
     def __str__(self):
         return f'{self.client} {self.start} {self.end}'

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 3rd party
     'django_extensions',
     'import_export',
+    'crispy_forms',
     # project apps
     'entries.apps.EntriesConfig',
     'main.apps.MainConfig',
@@ -141,3 +142,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SHELL_PLUS_PRINT_SQL = True
 
 SECURE_SSL_REDIRECT = False
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
