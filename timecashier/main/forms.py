@@ -33,7 +33,12 @@ class NewEntryForm(forms.Form):
             )
 
 
+class LocationForm(forms.Form):
 
+    latitude = forms.CharField()
+    longitude = forms.CharField()
 
-
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'

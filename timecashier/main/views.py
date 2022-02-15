@@ -13,8 +13,8 @@ def index(request):
     clients_dist = {}
     clients = Client.objects.all()
 
-    lat_user = 52.2518528
-    long_user = 21.0468864
+    lat_user = 52.194157
+    long_user = 21.0346955
 
     for client in clients:
         length = abs(
@@ -23,7 +23,7 @@ def index(request):
     min_dist = min(clients_dist.values())
     nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
 
-    active_entries = Entry.objects.filter(duration__isnull=True)
+    active_entries = Entry.objects.filter(user=request.user,duration__isnull=True)
 
     initial_dict = {
         "client": nearest_client.id,

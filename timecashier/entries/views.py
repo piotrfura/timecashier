@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import loader
+from main.forms import LocationForm, NewEntryForm
+from entries.models import Client, Entry, Location
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from main.views import index
+import datetime
 
-# from django.views.generic import View
-from django.http import JsonResponse
-
-from time import time
-from entries.models import Client, Entry
 # Create your views here.
 
 def clients_list(request):
@@ -29,18 +28,51 @@ def client_details(request, client_slug):
     return render(request, "entries/client_details.html", context)
 
 
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
 def whereami(request):
-    longitude = request.GET.get('longitude')
-    latitude = request.GET.get('latitude')
-    print(longitude, latitude)
+    nearest_client = Client.objects.last()
+    clients_dist = {}
+    clients = Client.objects.all()
 
-    if is_ajax(request):
-        t = time()
 
-        return JsonResponse({'seconds': t}, status=200)
+    if request.user.is_authenticated:
+        initial_dict = {
+            "client": nearest_client.id,
+            "start_date": datetime.datetime.today().date(),
+            "start_time": datetime.datetime.now().time(),
+            # "duration": datetime.time(0, 0, 0)
+        }
 
-    return render(request, "entries/whereami.html")
+        active_entries = Entry.objects.filter(user=request.user, duration__isnull=True)
+        form = NewEntryForm(initial=initial_dict)
+        # form = NewEntryForm()
+
+        context = {
+            "clients_list": clients,
+            "nearest_client": nearest_client,
+            "form": form,
+            "active_entries": active_entries
+        }
+        return render(request, 'entries/whereami.html', context)
+
+    if request.method == "POST" and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
+
+        longitude = request.POST.get('longitude')
+        latitude = request.POST.get('latitude')
+        location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
+        for client in clients:
+            length = abs(
+                ((float(client.longitude) - float(longitude)) ** 2 + (float(client.latitude) - float(latitude)) ** 2) ** (0.5))
+            clients_dist[client] = length
+        min_dist = min(clients_dist.values())
+        nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
+
+    if request.method == "POST" and request.user.is_authenticated:
+
+        form = NewEntryForm(request.POST)
+        if form.is_valid():
+            form.cleaned_data['user'] = request.user
+            form.cleaned_data['client'] = Client.objects.get(id=form.cleaned_data['client'])
+            entry = Entry.objects.create(**form.cleaned_data)
+            return HttpResponseRedirect(reverse("entries:whereami"))
+
 

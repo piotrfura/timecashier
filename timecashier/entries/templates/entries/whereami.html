@@ -1,24 +1,51 @@
 {% extends "main/base.html" %}
-
+{% load crispy_forms_tags %}
 {% load static %}
 {% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
 
-<script src="{% static 'entries/js/findme.js' %}"></script>
-
 {% block title %}Gdzie jestem{% endblock %}
+
 {% block content %}
-<h2 onload="getLocation()">Gdzie jestem?</h2>
+<input type="hidden" id="latitude">
+<input type="hidden" id="longitude">
 
-<!--<button class="find-location btn btn-secondary">Sprawdź lokalizację</button>-->
-<!--<script src="{% static 'entries/js/findme.js' %}"></script>-->
+{% csrf_token %}
+<script>getLocation()</script>
 
-<button type="button" class="btn btn-primary">Sprawdź</button>
+<h2>Gdzie jestem?</h2>
 
-<ul id="seconds">
-</ul>
+<p id="location"></p><br>
+<p id="coord"></p><br>
+<a id="mapslink" target="_blank"></a><br>
+<p id="nearby">Jesteś w pobliżu {{ nearest_client }}</p>
 
-<p class="status"></p>
-<a class="mapslink" target="_blank"></a><br >
+<div class="row" style="margin-top: 30px; padding: 10px;">
+</div>
 
+<!--<div class="row border" style="margin-top: 30px; padding: 10px;">-->
+{% crispy form  %}
+<!--</div>-->
+<div class="row" style="margin-top: 30px; padding: 10px;">
+    <h4>Aktywne zadania</h4>
+    <table id="table_active_entries" class="table table-striped table-dark">
+        <thead><th>Klient</th><th>Data</th><th>Czas rozpoczęcia</th><th>Długość</th></thead>
+        <tbody>
+        {% for entry in active_entries %}
+        <tr><td>{{ entry.client.name }}</td><td>{{ entry.start_date }}</td><td>{{ entry.start_time }}</td><td>{{ entry.duration }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script>
+let table = new DataTable('#table_active_entries', {
+    "pageLength":5,
+    "order": [[ 1, "desc" ]],
+    "searching": false,
+    "paging": true,
+    "info": false,
+    "lengthChange":false
+
+});
+</script>
+</div>
 {% endblock %}
 

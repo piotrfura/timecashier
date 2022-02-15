@@ -64,3 +64,12 @@ class Entry(Timestamped):
 
     def __str__(self):
         return f'{self.client} {self.start_date} {self.start_time}'
+
+
+class Location(Timestamped):
+    latitude = models.DecimalField(max_digits=10, decimal_places=7)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7)
+    user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="locations")
+
+    def __str__(self):
+        return f'{self.created} {self.user} {self.latitude} {self.longitude}'
