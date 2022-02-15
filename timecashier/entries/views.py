@@ -3,8 +3,10 @@ from main.forms import LocationForm, NewEntryForm
 from entries.models import Client, Entry, Location
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.http import JsonResponse
 from main.views import index
 import datetime
+
 
 # Create your views here.
 
@@ -29,42 +31,20 @@ def client_details(request, client_slug):
 
 
 def whereami(request):
-    nearest_client = Client.objects.last()
-    clients_dist = {}
-    clients = Client.objects.all()
-
-
-    if request.user.is_authenticated:
-        initial_dict = {
-            "client": nearest_client.id,
-            "start_date": datetime.datetime.today().date(),
-            "start_time": datetime.datetime.now().time(),
-            # "duration": datetime.time(0, 0, 0)
-        }
-
-        active_entries = Entry.objects.filter(user=request.user, duration__isnull=True)
-        form = NewEntryForm(initial=initial_dict)
-        # form = NewEntryForm()
-
-        context = {
-            "clients_list": clients,
-            "nearest_client": nearest_client,
-            "form": form,
-            "active_entries": active_entries
-        }
-        return render(request, 'entries/whereami.html', context)
+    initial_dict = {
+        # "client": nearest_client.id,
+        "start_date": datetime.datetime.today().date(),
+        "start_time": datetime.datetime.now().time(),
+        # "duration": datetime.time(0, 0, 0)
+    }
+    active_entries = Entry.objects.filter(user=request.user, duration__isnull=True)
 
     if request.method == "POST" and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
-
+        print('buuuyaaa')
         longitude = request.POST.get('longitude')
         latitude = request.POST.get('latitude')
         location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
-        for client in clients:
-            length = abs(
-                ((float(client.longitude) - float(longitude)) ** 2 + (float(client.latitude) - float(latitude)) ** 2) ** (0.5))
-            clients_dist[client] = length
-        min_dist = min(clients_dist.values())
-        nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
+
 
     if request.method == "POST" and request.user.is_authenticated:
 
@@ -75,4 +55,33 @@ def whereami(request):
             entry = Entry.objects.create(**form.cleaned_data)
             return HttpResponseRedirect(reverse("entries:whereami"))
 
+    else:
+        form = NewEntryForm(initial=initial_dict)
 
+    context = {
+        "form": form,
+        "active_entries": active_entries
+    }
+
+    return render(request, 'entries/whereami.html', context)
+
+
+def client_nearby(request):
+        clients = Client.objects.all()
+        clients_dist = {}
+
+        longitude = request.GET.get('longitude')
+        print(longitude)
+        latitude = request.GET.get('latitude')
+        # location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
+        for client in clients:
+            length = abs(
+                ((float(client.longitude) - float(longitude)) ** 2 + (float(client.latitude) - float(latitude)) ** 2) ** (
+                    0.5))
+            clients_dist[client] = length
+        min_dist = min(clients_dist.values())
+        nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
+        data = {
+            'nearest_client': nearest_client.id
+        }
+        return JsonResponse(data)

@@ -19,7 +19,6 @@ function getLocation(){
             $("#location").append('Znajdujesz się w ' + data.countryName + ', ' + data.city + ', ' + data.locality);
             $("#mapslink").text('Sprawdź na mapie');
             $("#mapslink").attr("href", `http://maps.google.com/maps?q=${latitude},${longitude}`);
-//            $("#id_client").val(2);
         })
     };
     function error(){
@@ -36,8 +35,6 @@ function getLocation(){
             longitude: longitude
         },
         success: function(){
-//                $(".btn").text(response.seconds)
-//                $("#seconds").append('<li>' + response.seconds + '</li>')
             $('#latitude').val(latitude);
             $('#longitude').val(longitude);
             $("#coord").append('Szerokość geograficzna: ' + latitude + '<br>Długość geograficzna: '+ longitude);
@@ -46,6 +43,5 @@ function getLocation(){
    };
 };
 
-//$(".btn").click(getLocation());
 
 

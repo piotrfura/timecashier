@@ -9,8 +9,11 @@
 <input type="hidden" id="latitude">
 <input type="hidden" id="longitude">
 
+
 {% csrf_token %}
 <script>getLocation()</script>
+
+
 
 <h2>Gdzie jestem?</h2>
 
@@ -47,5 +50,26 @@ let table = new DataTable('#table_active_entries', {
 });
 </script>
 </div>
+<!--<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>-->
+<script>
+    $("#id_start_date").change(function () {
+      var nearest_client = $("#id_client").val();
+        var latitude = $("#latitude").val();
+        var longitude = $("#longitude").val();
+      $.ajax({
+        url: '/ajax/client_nearby/',
+        data: {
+          'latitude': latitude,
+          'longitude': longitude
+
+        },
+        dataType: 'json',
+        success: function (data) {
+            $("#id_client").val(data.nearest_client);
+        }
+      });
+
+    });
+  </script>
 {% endblock %}
 
