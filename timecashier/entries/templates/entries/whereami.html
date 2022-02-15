@@ -3,18 +3,22 @@
 {% load static %}
 {% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
 
-
+<script src="{% static 'entries/js/findme.js' %}"></script>
 
 {% block title %}Gdzie jestem{% endblock %}
 {% block content %}
-<h2>Gdzie jestem?</h2>
+<h2 onload="getLocation()">Gdzie jestem?</h2>
 
+<!--<button class="find-location btn btn-secondary">Sprawdź lokalizację</button>-->
+<!--<script src="{% static 'entries/js/findme.js' %}"></script>-->
 
+<button type="button" class="btn btn-primary">Sprawdź</button>
 
-<button class="find-location btn btn-secondary">Sprawdź lokalizację</button>
-<script src="{% static 'entries/js/findme.js' %}"></script>
+<ul id="seconds">
+</ul>
 
 <p class="status"></p>
 <a class="mapslink" target="_blank"></a><br >
 
 {% endblock %}
+

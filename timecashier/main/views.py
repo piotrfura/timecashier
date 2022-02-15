@@ -5,10 +5,32 @@ from .forms import NewEntryForm
 from . import services
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import datetime
 
 # Create your views here.
 def index(request):
 
+    clients_dist = {}
+    clients = Client.objects.all()
+
+    lat_user = 52.2518528
+    long_user = 21.0468864
+
+    for client in clients:
+        length = abs(
+            ((float(client.longitude) - long_user) ** 2 + (float(client.latitude) - lat_user) ** 2) ** (0.5))
+        clients_dist[client] = length
+    min_dist = min(clients_dist.values())
+    nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
+
+    active_entries = Entry.objects.filter(duration__isnull=True)
+
+    initial_dict = {
+        "client": nearest_client.id,
+        "start_date": datetime.datetime.today().date(),
+        "start_time": datetime.datetime.now().time(),
+        # "duration": datetime.time(0, 0, 0)
+    }
 
     if request.method == "POST" and request.user.is_authenticated:
         # data = {
@@ -26,23 +48,7 @@ def index(request):
             entry = Entry.objects.create(**form.cleaned_data)
             return HttpResponseRedirect(reverse("main:index"))
     else:
-        form = NewEntryForm()
-
-        clients_dist = {}
-        clients = Client.objects.all()
-
-        lat_user = 52.2518528
-        long_user = 21.0468864
-
-        for client in clients:
-            length = abs(
-                ((float(client.longitude) - long_user) ** 2 + (float(client.latitude) - lat_user) ** 2) ** (0.5))
-            clients_dist[client] = length
-        min_dist = min(clients_dist.values())
-        nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
-
-        active_entries = Entry.objects.filter(end__isnull=True)
-
+        form = NewEntryForm(initial=initial_dict)
 
     context = {
             "nearest_client": nearest_client,

@@ -1,7 +1,8 @@
 from django.db import models
-from django.utils.timezone import make_aware, get_current_timezone
-from datetime import datetime, date, timedelta
+from django.utils import timezone
+from datetime import datetime, date, timedelta, time
 from django.utils.text import slugify
+
 
 # Create your models here.
 
@@ -45,20 +46,21 @@ class Client(Timestamped):
 
 
 class Entry(Timestamped):
-    start = models.DateTimeField(auto_now_add=True) #default=make_aware(datetime.now(), get_current_timezone()))
-    end = models.DateTimeField(blank=True, null=True)
+    start_date = models.DateField(default=date.today) #default=make_aware(datetime.now(), get_current_timezone()))
+    start_time = models.TimeField(default=timezone.now) #default=make_aware(datetime.now(), get_current_timezone()))
+    duration = models.TimeField(blank=True, null=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, related_name="entries")
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="entries")
     active = models.BooleanField(default=True)
     tags = models.ManyToManyField("tags.Tag", related_name="entries", blank=True)
 
-    class Meta:
-        constraints = [
-            models.CheckConstraint(
-                name="%(app_label)s_%(class)s_end_gte_start",
-                check=models.Q(end__gte=models.F("start")),
-            )
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.CheckConstraint(
+    #             name="%(app_label)s_%(class)s_end_gte_start",
+    #             check=models.Q(end__gte=models.F("start")),
+    #         )
+    #     ]
 
     def __str__(self):
-        return f'{self.client} {self.start} {self.end}'
+        return f'{self.client} {self.start_date} {self.start_time}'

@@ -116,6 +116,10 @@ LANGUAGE_CODE = 'pl-pl'
 
 TIME_ZONE = 'Europe/Warsaw'
 
+DATE_FORMAT="%d.%m.%Y"
+
+L10N=False
+
 USE_I18N = True
 
 USE_TZ = False

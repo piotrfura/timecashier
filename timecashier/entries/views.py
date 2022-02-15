@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from .models import Client, Entry
 
+# from django.views.generic import View
+from django.http import JsonResponse
 
+from time import time
+from entries.models import Client, Entry
 # Create your views here.
 
 def clients_list(request):
@@ -25,6 +28,19 @@ def client_details(request, client_slug):
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
 
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 def whereami(request):
+    longitude = request.GET.get('longitude')
+    latitude = request.GET.get('latitude')
+    print(longitude, latitude)
+
+    if is_ajax(request):
+        t = time()
+
+        return JsonResponse({'seconds': t}, status=200)
+
     return render(request, "entries/whereami.html")
 

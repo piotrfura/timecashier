@@ -26,7 +26,7 @@ class EntryResource(resources.ModelResource):
 @admin.register(Entry)
 class EntryAdmin(ExportMixin, admin.ModelAdmin):
     # list_display = [field.name for field in Entry._meta.get_fields()]
-    list_display = ["id", "start", "end", "client", "user", "created", "modified", "active"]
+    list_display = ["id", "start_date", "start_time", "duration", "client", "user", "created", "modified", "active"]
     search_fields = ["client"]
     list_filter = ["client", "user", "active"]
     resource_class = EntryResource
