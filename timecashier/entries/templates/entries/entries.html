@@ -8,10 +8,10 @@
 {% block content %}
 <h2>Wpisy</h2>
 <table id="table_entries" class="table table-striped table-dark">
-    <thead><th></th><th>Klient</th><th>Czas rozpoczęcia</th><th>Czas zakończenia</th></thead>
+    <thead><th></th><th>Klient</th><th>Data</th><th>Start</th><th>Długość</th></thead>
     <tbody>
     {% for entry in entries_list %}
-    <tr><td>{{ entry.id }}</td><td>{{ entry.client.name }}</td><td>{{ entry.start }}</td><td>{{ entry.end }}</td></tr>
+    <tr><td>{{ entry.id }}</td><td>{{ entry.client.name }}</td><td>{{ entry.start_date }}</td><td>{{ entry.start_time }}</td><td>{{ entry.duration }}</td></tr>
     {% endfor %}
     </tbody>
 </table>
