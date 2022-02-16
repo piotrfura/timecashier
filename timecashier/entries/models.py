@@ -46,24 +46,24 @@ class Client(Timestamped):
 
 
 class Entry(Timestamped):
-    start_date = models.DateField(default=date.today) #default=make_aware(datetime.now(), get_current_timezone()))
-    start_time = models.TimeField(default=timezone.now) #default=make_aware(datetime.now(), get_current_timezone()))
-    duration = models.TimeField(blank=True, null=True)
+    # start_date = models.DateField(default=datetime.today) #default=make_aware(datetime.now(), get_current_timezone()))
+    start = models.DateTimeField(default=timezone.now) #default=make_aware(datetime.now(), get_current_timezone()))
+    end = models.DateTimeField(blank=True, null=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, related_name="entries")
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="entries")
     active = models.BooleanField(default=True)
     tags = models.ManyToManyField("tags.Tag", related_name="entries", blank=True)
 
-    # class Meta:
-    #     constraints = [
-    #         models.CheckConstraint(
-    #             name="%(app_label)s_%(class)s_end_gte_start",
-    #             check=models.Q(end__gte=models.F("start")),
-    #         )
-    #     ]
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_end_gte_start",
+                check=models.Q(end__gte=models.F("start")),
+            )
+        ]
 
     def __str__(self):
-        return f'{self.client} {self.start_date} {self.start_time}'
+        return f'{self.client} {self.start} {self.end}'
 
 
 class Location(Timestamped):

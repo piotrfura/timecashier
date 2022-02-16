@@ -1,62 +1,64 @@
 from django.shortcuts import render
 #from django.http import HttpResponse
-from entries.models import Client, Entry
+from entries.models import Client, Entry, Location
 from .forms import NewEntryForm
-from . import services
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-import datetime
+from datetime import date, datetime
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
-
-    clients_dist = {}
-    clients = Client.objects.all()
-
-    lat_user = 52.194157
-    long_user = 21.0346955
-
-    for client in clients:
-        length = abs(
-            ((float(client.longitude) - long_user) ** 2 + (float(client.latitude) - lat_user) ** 2) ** (0.5))
-        clients_dist[client] = length
-    min_dist = min(clients_dist.values())
-    nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
-
-    active_entries = Entry.objects.filter(user=request.user,duration__isnull=True)
-
     initial_dict = {
-        "client": nearest_client.id,
-        "start_date": datetime.datetime.today().date(),
-        "start_time": datetime.datetime.now().time(),
-        # "duration": datetime.time(0, 0, 0)
+        "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),#yyyy-MM-ddThh:mm
     }
+    clients = Client.objects.all()
+    clients_dist = {}
+    active_entries = Entry.objects.filter(user=request.user, end__isnull=True)
+
+    if request.method == "POST" and request.META.get(
+            'HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
+        longitude = request.POST.get('longitude')
+        latitude = request.POST.get('latitude')
+        location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
 
     if request.method == "POST" and request.user.is_authenticated:
-        # data = {
-        #     "start": request.POST.get('start', None),
-        #     "end": request.POST.get('end', None),
-        #     "client": Client.objects.get(pk=request.POST['client']),
-        #     "user": request.user,
-        # }
-        # entry = Entry.objects.create(**data)
 
         form = NewEntryForm(request.POST)
         if form.is_valid():
             form.cleaned_data['user'] = request.user
-            form.cleaned_data['client'] = Client.objects.get(id=form.cleaned_data['client'])
             entry = Entry.objects.create(**form.cleaned_data)
             return HttpResponseRedirect(reverse("main:index"))
+
     else:
         form = NewEntryForm(initial=initial_dict)
 
     context = {
-            "nearest_client": nearest_client,
-               "clients_list": clients,
-               "active_entries": active_entries,
-               "form": form
+        "form": form,
+        "active_entries": active_entries
     }
+
     return render(request, 'main/index.html', context)
+
+
+def client_nearby(request):
+    clients = Client.objects.all()
+    clients_dist = {}
+
+    longitude = request.GET.get('longitude')
+    latitude = request.GET.get('latitude')
+
+    for client in clients:
+        length = abs(
+            ((float(client.longitude) - float(longitude)) ** 2 + (float(client.latitude) - float(latitude)) ** 2) ** (
+                0.5))
+        clients_dist[client] = length
+    min_dist = min(clients_dist.values())
+    nearest_client = [client for client in clients_dist if clients_dist[client] == min_dist][0]
+    data = {
+        'nearest_client': nearest_client.id
+    }
+    return JsonResponse(data)
 
 def about(request):
     return render(request, 'main/about.html')
