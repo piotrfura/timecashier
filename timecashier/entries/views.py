@@ -37,14 +37,14 @@ def whereami(request):
         "start_time": datetime.datetime.now().time(),
         # "duration": datetime.time(0, 0, 0)
     }
+    clients = Client.objects.all()
+    clients_dist = {}
     active_entries = Entry.objects.filter(user=request.user, duration__isnull=True)
 
     if request.method == "POST" and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
-        print('buuuyaaa')
         longitude = request.POST.get('longitude')
         latitude = request.POST.get('latitude')
         location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
-
 
     if request.method == "POST" and request.user.is_authenticated:
 
@@ -71,9 +71,8 @@ def client_nearby(request):
         clients_dist = {}
 
         longitude = request.GET.get('longitude')
-        print(longitude)
         latitude = request.GET.get('latitude')
-        # location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
+
         for client in clients:
             length = abs(
                 ((float(client.longitude) - float(longitude)) ** 2 + (float(client.latitude) - float(latitude)) ** 2) ** (

@@ -15,12 +15,9 @@
 
 
 
-<h2>Gdzie jestem?</h2>
+<h2>Dashboard</h2>
 
-<p id="location"></p><br>
-<p id="coord"></p><br>
 <a id="mapslink" target="_blank"></a><br>
-<p id="nearby">Jesteś w pobliżu {{ nearest_client }}</p>
 
 <div class="row" style="margin-top: 30px; padding: 10px;">
 </div>
@@ -40,36 +37,14 @@
     </table>
     <script>
 let table = new DataTable('#table_active_entries', {
+    "order": [[ 1, "desc" ], [2, "desc"]],
     "pageLength":5,
-    "order": [[ 1, "desc" ]],
     "searching": false,
     "paging": true,
     "info": false,
     "lengthChange":false
-
 });
 </script>
 </div>
-<!--<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>-->
-<script>
-    $("#id_start_date").change(function () {
-      var nearest_client = $("#id_client").val();
-        var latitude = $("#latitude").val();
-        var longitude = $("#longitude").val();
-      $.ajax({
-        url: '/ajax/client_nearby/',
-        data: {
-          'latitude': latitude,
-          'longitude': longitude
-
-        },
-        dataType: 'json',
-        success: function (data) {
-            $("#id_client").val(data.nearest_client);
-        }
-      });
-
-    });
-  </script>
 {% endblock %}
 

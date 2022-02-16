@@ -8,23 +8,43 @@ function getLocation(){
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
 
-        console.log(latitude + ' ' + longitude);
+//        console.log(latitude + ' ' + longitude);
         loadLocationData();
         const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pl`;
-        console.log(geoApiUrl);
+//        console.log(geoApiUrl);
 
         fetch(geoApiUrl)
         .then(res => res.json())
         .then(data => {
-            $("#location").append('Znajdujesz się w ' + data.countryName + ', ' + data.city + ', ' + data.locality);
-            $("#mapslink").text('Sprawdź na mapie');
+            $("#mapslink").text('Znajdujesz się w ' + data.countryName + ', ' + data.city + ', ' + data.locality + ' (' + latitude + ', '+ longitude + ') - klinij, aby sprawdzić w Mapach Google');
             $("#mapslink").attr("href", `http://maps.google.com/maps?q=${latitude},${longitude}`);
-        })
+        });
+
     };
     function error(){
         console.log('Unable to retrieve location data');
         $("#location").append('Unable to retrieve location data');
     };
+
+    function setLocation(){
+//    $("#id_start_date").change(function () {
+      var nearest_client = $("#id_client").val();
+        var latitude = $("#latitude").val();
+        var longitude = $("#longitude").val();
+      $.ajax({
+        url: '/ajax/client_nearby/',
+        data: {
+          'latitude': latitude,
+          'longitude': longitude
+
+        },
+        dataType: 'json',
+        success: function (data) {
+            $("#id_client").val(data.nearest_client);
+        }
+      });
+};
+
     function loadLocationData(){
     $.ajax({
         url: '',
@@ -37,11 +57,10 @@ function getLocation(){
         success: function(){
             $('#latitude').val(latitude);
             $('#longitude').val(longitude);
-            $("#coord").append('Szerokość geograficzna: ' + latitude + '<br>Długość geograficzna: '+ longitude);
+            setLocation();
         }
+
     });
    };
 };
-
-
 
