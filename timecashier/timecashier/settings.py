@@ -108,16 +108,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = 'pl-pl'
-LOCALE_NAME = 'pl_PL'
+# LOCALE_NAME = 'pl_PL'
 
 TIME_ZONE = 'Europe/Warsaw'
 
-# DATE_FORMAT = 'YYYY-MM-DD'
-# DATE_INPUT_FORMATS = ('%d.%m.%Y', '%Y.%m.%d')
+# DATE_FORMAT = "%Y-%m-%d %H:%M"
+DATE_INPUT_FORMATS = ("%Y-%m-%d %H:%M")#, '%d.%m.%Y', '%Y.%m.%d')
 
 L10N = True
 
-USE_I18N = False
+USE_I18N = True
 
 USE_TZ = False
 

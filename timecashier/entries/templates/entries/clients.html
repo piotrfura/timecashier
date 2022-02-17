@@ -13,7 +13,7 @@
     <tbody>
     {% for client in clients_list %}
     {% if client.active %}
-    <tr><td>{% if client.active %} <i class="bi-check-circle check-icon"></i> {% else %} <i class="bi-x-circle cross-icon"></i>{% endif %}</td><td>{{ client.id }}.</td><td><a href="{% url 'entries:client_details' client.slug %}">{{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
+    <tr><td>{% if client.active %} <i class="bi-check-circle green-icon"></i> {% else %} <i class="bi-x-circle red-icon"></i>{% endif %}</td><td>{{ client.id }}.</td><td><a href="{% url 'entries:client_details' client.slug %}">{{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
     {% endif %}
     {% endfor %}
     </tbody>

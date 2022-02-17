@@ -30,6 +30,7 @@ class NewEntryForm(forms.ModelForm):
         self.fields['start'].label = 'Start'
         self.fields['start'].widget = forms.DateInput(attrs={'required': True, 'type': 'datetime-local'})
         self.fields['end'].label = 'Koniec'
+        self.fields['end'].widget = forms.DateInput(attrs={'required': False, 'type': 'datetime-local'})
         # self.fields['start_time'].widget = forms.TimeInput(attrs={'required': True, 'type': 'time'})
         self.fields['client'].label = 'Klient'
 
@@ -39,7 +40,7 @@ class NewEntryForm(forms.ModelForm):
                     Column('start', css_class='col-sm'),
                     Column('end', css_class='col-sm'),
                     Column('client', css_class='col-sm'),
-                    Submit('submit', 'Start', css_class='col-sm'),
+                    Submit('submit', 'DODAJ', css_class='col-sm'),
                     css_class='row'
                 ),
                 css_class='container'

@@ -16,7 +16,7 @@ const findMyLocation = () => {
         .then(res => res.json())
         .then(data => {
             status.textContent = 'Znajdujesz się w ' + data.countryName + ', ' + data.city + ', ' + data.locality;
-            mapslink.textContent = 'Sprawdź na mapie'
+            mapslink.textContent = 'Sprawdź na mapie';
             mapslink.href = `http://maps.google.com/maps?q=${latitude},${longitude}`;
         })
 

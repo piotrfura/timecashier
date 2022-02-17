@@ -7,6 +7,24 @@
 {% block title %}Home{% endblock %}
 
 {{% block content %}
+<script>
+$(document).ready(function() {
+    let start = $('#start').text().slice(-5)
+    console.log(start)
+
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth()+1;
+    let day = today.getDate();
+    let hour = today.getHours();
+    let minute = today.getMinutes();
+    let seconds = today.getSeconds();
+
+
+});
+</script>
+
+
 <input type="hidden" id="latitude">
 <input type="hidden" id="longitude">
 
@@ -18,6 +36,8 @@
 
 <a id="mapslink" target="_blank"></a><br>
 
+<div id="timer"></div>
+
 <div class="row" style="margin-top: 30px; padding: 10px;">
 </div>
 
@@ -27,22 +47,16 @@
 <div class="row" style="margin-top: 30px; padding: 10px;">
     <h4>Aktywne zadania</h4>
     <table id="table_active_entries" class="table table-striped table-dark">
-        <thead><th>Klient</th><th>Start</th><th>Koniec</th><th>Długość</th></thead>
+        <thead><th>Klient</th><th>Start</th><th></th></thead>
         <tbody>
         {% for entry in active_entries %}
-        <tr><td>{{ entry.client.name }}</td><td>{{ entry.start }}</td><td>{{ entry.end }}</td><td></td></tr>
+        <tr>
+            <td>{{ entry.client.name }}</td>
+            <td id="start">{{ entry.start }}</td>
+            </td><td><a href="{% url 'entries:entry_details' entry.id %}"><i class="bi-pencil-square blue-icon"></i></a> | <a href="{% url 'entries:entry_details' entry.id %}"><i class="bi-stop-circle red-icon"></i></a></td>
+        </tr>
         {% endfor %}
         </tbody>
     </table>
-    <script>
-let table = new DataTable('#table_active_entries', {
-    "order": [[ 1, "desc" ], [2, "desc"]],
-    "pageLength":5,
-    "searching": false,
-    "paging": false,
-    "info": false,
-    "lengthChange":false
-});
-</script>
 </div>
 {% endblock %}

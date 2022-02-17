@@ -116,11 +116,15 @@ a:focus {
     }
 }
 
-.check-icon {
+.green-icon {
     color: #6bbc54;
 }
 
 
-.cross-icon {
+.red-icon {
     color: #bc5456;
+}
+
+.blue-icon {
+    color: #5479bc;
 }

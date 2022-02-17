@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from entries.models import Client, Entry, Location
+from main.forms import NewEntryForm
 # from django.http import HttpResponseRedirect
-
+from datetime import datetime
 
 # Create your views here.
 
@@ -23,3 +24,15 @@ def client_details(request, client_slug):
     client_link = f'http://maps.google.com/maps?q= {client.latitude},{client.longitude}'
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
+
+def entry_details(request, entry_id):
+    entry_details = get_object_or_404(Entry, pk=entry_id)
+    initial_dict = {
+        "start": entry_details.start.strftime("%Y-%m-%dT%H:%M"),
+        "end": datetime.now().strftime("%Y-%m-%dT%H:%M"),#yyyy-MM-ddThh:mm
+    }
+    form = NewEntryForm(instance=entry_details, initial=initial_dict)
+    context = {
+        'entry_details': entry_details,
+        'form': form}
+    return render(request, "entries/entry_details.html", context)
