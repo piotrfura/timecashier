@@ -1,16 +1,16 @@
 from django.shortcuts import render
-#from django.http import HttpResponse
 from entries.models import Client, Entry, Location
 from .forms import NewEntryForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import date, datetime
 from django.http import JsonResponse
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
     initial_dict = {
-        "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),#yyyy-MM-ddThh:mm
+        "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
     }
     clients = Client.objects.all()
     clients_dist = {}
@@ -25,10 +25,12 @@ def index(request):
     if request.method == "POST" and request.user.is_authenticated:
 
         form = NewEntryForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and len(active_entries) == 0:
             form.cleaned_data['user'] = request.user
             entry = Entry.objects.create(**form.cleaned_data)
             return HttpResponseRedirect(reverse("main:index"))
+        else:
+            messages.error(request, 'Przed dodaniem kolejnego zadania musisz zakończyć poprzednie!')
 
     else:
         form = NewEntryForm(initial=initial_dict)

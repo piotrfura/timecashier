@@ -26,12 +26,11 @@ class NewEntryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.form_action = 'entry'
+        self.helper.form_action = ''
         self.fields['start'].label = 'Start'
         self.fields['start'].widget = forms.DateInput(attrs={'required': True, 'type': 'datetime-local'})
         self.fields['end'].label = 'Koniec'
         self.fields['end'].widget = forms.DateInput(attrs={'required': False, 'type': 'datetime-local'})
-        # self.fields['start_time'].widget = forms.TimeInput(attrs={'required': True, 'type': 'time'})
         self.fields['client'].label = 'Klient'
 
         self.helper.layout = Layout(
@@ -41,6 +40,36 @@ class NewEntryForm(forms.ModelForm):
                     Column('end', css_class='col-sm'),
                     Column('client', css_class='col-sm'),
                     Submit('submit', 'DODAJ', css_class='col-sm'),
+                    css_class='row'
+                ),
+                css_class='container'
+            )
+        )
+
+
+class EditEntryForm(forms.ModelForm):
+    class Meta:
+        model = Entry
+        fields = ['start', 'end', 'client']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = ''
+        self.fields['start'].label = 'Start'
+        self.fields['start'].widget = forms.DateInput(attrs={'required': True, 'type': 'datetime-local'})
+        self.fields['end'].label = 'Koniec'
+        self.fields['end'].widget = forms.DateInput(attrs={'required': False, 'type': 'datetime-local'})
+        self.fields['client'].label = 'Klient'
+
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Column('start', css_class='col-sm'),
+                    Column('end', css_class='col-sm'),
+                    Column('client', css_class='col-sm'),
+                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger'),
                     css_class='row'
                 ),
                 css_class='container'

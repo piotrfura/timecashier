@@ -29,8 +29,8 @@ function getLocation(){
     function setLocation(){
 //    $("#id_start_date").change(function () {
       var nearest_client = $("#id_client").val();
-        var latitude = $("#latitude").val();
-        var longitude = $("#longitude").val();
+//        var latitude = $("#latitude").val();
+//        var longitude = $("#longitude").val();
       $.ajax({
         url: '/ajax/client_nearby/',
         data: {
@@ -55,8 +55,8 @@ function getLocation(){
             longitude: longitude
         },
         success: function(){
-            $('#latitude').val(latitude);
-            $('#longitude').val(longitude);
+//            $('#latitude').val(latitude);
+//            $('#longitude').val(longitude);
             setLocation();
         }
 

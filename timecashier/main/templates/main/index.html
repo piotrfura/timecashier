@@ -7,27 +7,6 @@
 {% block title %}Home{% endblock %}
 
 {{% block content %}
-<script>
-$(document).ready(function() {
-    let start = $('#start').text().slice(-5)
-    console.log(start)
-
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth()+1;
-    let day = today.getDate();
-    let hour = today.getHours();
-    let minute = today.getMinutes();
-    let seconds = today.getSeconds();
-
-
-});
-</script>
-
-
-<input type="hidden" id="latitude">
-<input type="hidden" id="longitude">
-
 
 {% csrf_token %}
 <script>getLocation()</script>
@@ -59,4 +38,6 @@ $(document).ready(function() {
         </tbody>
     </table>
 </div>
+
+
 {% endblock %}

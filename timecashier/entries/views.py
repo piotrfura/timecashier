@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from entries.models import Client, Entry, Location
-from main.forms import NewEntryForm
-# from django.http import HttpResponseRedirect
+from main.forms import NewEntryForm, EditEntryForm
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from datetime import datetime
+from django.contrib import messages
 
 # Create your views here.
 
@@ -31,7 +33,21 @@ def entry_details(request, entry_id):
         "start": entry_details.start.strftime("%Y-%m-%dT%H:%M"),
         "end": datetime.now().strftime("%Y-%m-%dT%H:%M"),#yyyy-MM-ddThh:mm
     }
-    form = NewEntryForm(instance=entry_details, initial=initial_dict)
+
+
+    if request.method == "POST" and request.user.is_authenticated:
+        form = EditEntryForm(request.POST, instance=entry_details, initial=initial_dict)
+        if form.is_valid():
+            # post = details.save(commit=False)
+            form.save()
+            messages.success(request, 'Pomyślnie zapisano zmiany!')
+            return HttpResponseRedirect(reverse("main:index"))
+        else:
+            messages.warning(request, 'Błąd!')
+
+    else:
+        form = EditEntryForm(instance=entry_details, initial=initial_dict)
+
     context = {
         'entry_details': entry_details,
         'form': form}
