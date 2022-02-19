@@ -91,8 +91,9 @@ def index(request):
             print(username)
             login(request, user)
             return HttpResponseRedirect(reverse("main:home"))
-        else:
-            HttpResponse('Błąd logowania')
+        if user is None:
+            messages.error(request, 'Nieprawidłowy użytkownik lub hasło!')
+            return HttpResponseRedirect(reverse("main:index"))
     else:
         form = LoginForm()
     return render(request, 'main/index.html', {"form": form})
