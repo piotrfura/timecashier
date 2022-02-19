@@ -5,23 +5,25 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import datetime
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import DurationField, ExpressionWrapper, F
 
 # Create your views here.
 
+@login_required
 def clients_list(request):
     clients = Client.objects.all()
     context = {'clients_list': clients}
     return render(request, "entries/clients.html", context)
 
-
+@login_required
 def entries_list(request):
     entries = Entry.objects.all().filter(user=request.user, inactive=False, end__isnull=False).order_by("-created")
     # Entry.objects.annotate(duration=(ExpressionWrapper((F('end') - F('start')), output_field=DurationField())))
     context = {'entries_list': entries}
     return render(request, "entries/entries.html", context)
 
-
+@login_required
 def client_details(request, client_slug):
     client = Client.objects.filter(inactive=False).get(slug=client_slug)
 
@@ -29,6 +31,7 @@ def client_details(request, client_slug):
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
 
+@login_required
 def entry_save(request, entry_id):
     entry_details = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {
@@ -43,7 +46,7 @@ def entry_save(request, entry_id):
             entry_details.duration = form.cleaned_data['end'] - form.cleaned_data['start']
             entry_details.save()
             messages.success(request, 'Pomyślnie zapisano zmiany!')
-            return HttpResponseRedirect(reverse("main:index"))
+            return HttpResponseRedirect(reverse("main:home"))
         else:
             messages.warning(request, 'Błąd!')
 
@@ -55,7 +58,7 @@ def entry_save(request, entry_id):
         'form': form}
     return render(request, "entries/entry_details.html", context)
 
-
+@login_required
 def entry_details(request, entry_id):
     entry_details = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {

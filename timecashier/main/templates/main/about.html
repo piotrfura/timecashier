@@ -1,19 +1,30 @@
-{% extends "main/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}O aplikacji{% endblock %}
 {% block content %}
 <h2>O aplikacji</h2>
 
-<img src="{% static 'main/images/timecashier_logo.png' %}" alt="TimeCashier"  style="max-width: 20%; height: auto; min-width: 150px;">
 
-<p>Aplikacja służy do zliczania czasu pracy na podstawie lokalizacji użytkownika.</p>
-<ol><b>Lista funkcjonalności w trakcie przygotowania:</b>
-    <li>Aktywne zadania - guzik STOP</li>
-    <li>Zadania - EDYCJA</li>
-    <li>Zadania - wiersz TOTAL</li>
-    <li>Responsywność - iphone</li>
-    <li>Filtrowanie zadań</li>
-    <li>Raport pdf</li>
+<p>Aplikacja TimeCashier służy do rejestrowania czasu pracy spędzonego u klientów na podstawie bieżącej lokalizacji użytkownika.</p>
+
+<img src="{% static 'main/images/timecashier_logo.png' %}" alt="TimeCashier"  style="max-width: 5%; height: auto; min-width: 150px;">
+
+<div class="row" style="margin-top: 30px; padding: 10px;">
+<ol><b>Lista funkcjonalności:</b>
+    <li>Automatyczne pobieranie lokalizacji zalogowanego użytkownika przy wejściu na DASHBOARD</li>
+    <li>Dashboard - sprawdzenie aktualnej lokalizacji na mapie - link pod nagłówkiem</li>
+    <li>Dashboard - dodawanie nowego zadania dla Klienta znajdującego się najbliżej, z bieżącą datą startu <b><i>jednym kliknięciem</i></b></li>
+    <li>Dashboard - zakończenie aktywnego zadania, wraz z opcjonalnym opisem</li>
+    <li>Klienci - podgląd lokalizacji klienta na mapie</li>
+    <li>Zadania - możliwość filtrowania zadań po kliencie i skopiowania, bądź pobrania rekordów do pliku csv</li>
+    <li>Zadania - możliwość edycji i usuwania zakończonych zadań</li>
+    <li>Zadania - walidacja dat i komunikaty o błędach</li>
+
+    <li><i>Layout - dostosowanie do wyświetlania na urządzeniach mobilnych (in progress)</i></li>
 </ol>
+</div>
+
+
+
 {% endblock %}

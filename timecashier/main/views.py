@@ -1,15 +1,18 @@
 from django.shortcuts import render
 from entries.models import Client, Entry, Location
-from .forms import NewEntryForm
+from .forms import NewEntryForm, LoginForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import date, datetime
 from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from datetime import timedelta, time
 
 # Create your views here.
-def index(request):
+@login_required
+def home(request):
     initial_dict = {
         "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
     }
@@ -40,7 +43,7 @@ def index(request):
                 messages.success(request, 'Pomyślnie dodano zadanie!')
             if end_time is not None and end_time < start_time:
                 messages.error(request, 'Data zakończenia musi być późniejsza od daty startu!')
-            return HttpResponseRedirect(reverse("main:index"))
+            return HttpResponseRedirect(reverse("main:home"))
         if len(active_entries) != 0:
             messages.error(request, 'Przed dodaniem kolejnego zadania musisz zakończyć poprzednie!')
 
@@ -53,9 +56,9 @@ def index(request):
         "entries": entries,
     }
 
-    return render(request, 'main/index.html', context)
+    return render(request, 'main/home.html', context)
 
-
+@login_required
 def client_nearby(request):
     clients = Client.objects.all()
     clients_dist = {}
@@ -75,5 +78,21 @@ def client_nearby(request):
     }
     return JsonResponse(data)
 
+@login_required
 def about(request):
     return render(request, 'main/about.html')
+
+def index(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            print(username)
+            login(request, user)
+            return HttpResponseRedirect(reverse("main:home"))
+        else:
+            HttpResponse('Błąd logowania')
+    else:
+        form = LoginForm()
+    return render(request, 'main/index.html', {"form": form})

@@ -1,75 +1,11 @@
-{% extends "main/base.html" %}
+{% extends "base.html" %}
 
 {% load crispy_forms_tags %}
 
-{% load static %}
-{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
-{% block title %}Home{% endblock %}
+{% block content %}
+<div class="col-md-8 offset-md-2">
+<h1>Logowanie</h1>
 
-{{% block content %}
-
-{% csrf_token %}
-<script>getLocation()</script>
-
-<h2>Dashboard</h2>
-
-<a id="mapslink" target="_blank"></a><br>
-
-<div id="timer"></div>
-
-<div class="row" style="margin-top: 30px; padding: 10px;">
-</div>
-
-<!--<div class="row border" style="margin-top: 30px; padding: 10px;">-->
 {% crispy form  %}
-<!--</div>-->
-<!--<div class="row" style="margin-top: 30px; padding: 10px;">-->
-<div class="row border" style="margin-top: 30px; padding: 10px;">
-    <h4>Aktywne zadanie</h4>
-    <table id="table_active_entries" class="table table-striped table-dark">
-        <thead><th></th><th>Klient</th><th>Start</th><th>Zakończ</th></thead>
-        <tbody>
-        {% for entry in active_entries %}
-        <tr>
-            <td><i class="bi-caret-right-square-fill blue-icon"></i></td>
-            <td>{{ entry.client.name }}</td>
-            <td id="start">{{ entry.start }}</td>
-            <td>
-<!--                <a href="{% url 'entries:entry_details' entry.id %}"><i class="bi-pencil-square blue-icon"></i></a>-->
-                <a href="{% url 'entries:entry_save' entry.id %}"><i class="bi-stop-circle-fill red-icon"></i></a>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <br>
-    </div>
-<div class="row border" style="margin-top: 30px; padding: 10px;">
-    <h4>Ostatnie zadania</h4>
-    <table id="table_entries_last" class="table table-striped table-dark">
-        <thead><th></th><th>Klient</th><th>Start</th><th>Koniec</th><th>Czas</th><th>Edytuj</th></thead>
-        <tbody>
-        {% for entry in entries %}
-        <tr>
-            <td><i class="bi-check-circle green-icon"></i></td>
-            <td>{{ entry.client.name }}</td>
-            <td id="start">{{ entry.start }}</td>
-            <td id="end">{{ entry.end }}</td>
-            <td id="duration">{{ entry.duration }}</td>
-            <td>
-                <a href="{% url 'entries:entry_details' entry.id %}">
-                    <i class="bi-pencil-square blue-icon"></i>
-                </a>
-<!--                | -->
-<!--                <a href="{% url 'entries:entry_details' entry.id %}">-->
-<!--                    <i class="bi-stop-circle red-icon"></i>-->
-<!--                </a>-->
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 </div>
-
-
 {% endblock %}

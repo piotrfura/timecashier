@@ -4,6 +4,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, Column
 from entries.models import Entry
 from datetime import datetime
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 
 
 class LocationForm(forms.Form):
@@ -80,3 +82,18 @@ class EditEntryForm(forms.ModelForm):
                 css_class='container'
             )
         )
+
+
+
+class LoginForm(AuthenticationForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = ''
+        self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
