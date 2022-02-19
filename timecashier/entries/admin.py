@@ -13,9 +13,9 @@ from .models import Entry
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "latitude", "longitude", "user","created", "modified", "active"]
+    list_display = ["id", "name", "latitude", "longitude", "user","created", "modified", "inactive"]
     search_fields = ["name"]
-    list_filter = ["user", "active"]
+    list_filter = ["user", "inactive"]
     prepopulated_fields = {"slug": ("name",)}
 
 class EntryResource(resources.ModelResource):
@@ -26,8 +26,8 @@ class EntryResource(resources.ModelResource):
 @admin.register(Entry)
 class EntryAdmin(ExportMixin, admin.ModelAdmin):
     # list_display = [field.name for field in Entry._meta.get_fields()]
-    list_display = ["id", "start", "end", "client", "user", "created", "modified", "active"]
+    list_display = ["id", "start", "end", "client", "user", "created", "modified", "inactive"]
     search_fields = ["client"]
-    list_filter = ["client", "user", "active"]
+    list_filter = ["client", "user", "inactive"]
     resource_class = EntryResource
     pass

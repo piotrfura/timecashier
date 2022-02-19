@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import datetime
 from django.contrib import messages
+from django.db.models import DurationField, ExpressionWrapper, F
 
 # Create your views here.
 
@@ -15,36 +16,74 @@ def clients_list(request):
 
 
 def entries_list(request):
-    entries = Entry.objects.all().filter(user=request.user).order_by("-created")
+    entries = Entry.objects.all().filter(user=request.user, inactive=False).order_by("-created")
+    # Entry.objects.annotate(duration=(ExpressionWrapper((F('end') - F('start')), output_field=DurationField())))
     context = {'entries_list': entries}
     return render(request, "entries/entries.html", context)
 
 
 def client_details(request, client_slug):
-    client = Client.objects.filter(active=True).get(slug=client_slug)
+    client = Client.objects.filter(inactive=False).get(slug=client_slug)
 
     client_link = f'http://maps.google.com/maps?q= {client.latitude},{client.longitude}'
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
 
-def entry_details(request, entry_id):
+def entry_save(request, entry_id):
     entry_details = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {
         "start": entry_details.start.strftime("%Y-%m-%dT%H:%M"),
         "end": datetime.now().strftime("%Y-%m-%dT%H:%M"),#yyyy-MM-ddThh:mm
     }
 
-
     if request.method == "POST" and request.user.is_authenticated:
         form = EditEntryForm(request.POST, instance=entry_details, initial=initial_dict)
         if form.is_valid():
-            # post = details.save(commit=False)
-            form.save()
+            entry_details = form.save(commit=False)
+            entry_details.duration = form.cleaned_data['end'] - form.cleaned_data['start']
+            entry_details.save()
             messages.success(request, 'Pomyślnie zapisano zmiany!')
             return HttpResponseRedirect(reverse("main:index"))
         else:
             messages.warning(request, 'Błąd!')
 
+    else:
+        form = EditEntryForm(instance=entry_details, initial=initial_dict)
+
+    context = {
+        'entry_details': entry_details,
+        'form': form}
+    return render(request, "entries/entry_details.html", context)
+
+
+def entry_details(request, entry_id):
+    entry_details = get_object_or_404(Entry, pk=entry_id)
+    initial_dict = {
+        "start": entry_details.start.strftime("%Y-%m-%dT%H:%M"),
+        "end": entry_details.end.strftime("%Y-%m-%dT%H:%M"),#yyyy-MM-ddThh:mm
+    }
+
+    if request.method == "POST" and request.user.is_authenticated:
+        active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
+        form = EditEntryForm(request.POST, instance=entry_details, initial=initial_dict)
+        if form.is_valid() and len(active_entries) <= 1:
+            start_time = form.cleaned_data['start']
+            end_time = form.cleaned_data['end']
+            if end_time is None:
+                entry_details = form.save(commit=False)
+                entry_details.duration = None
+                entry_details.save()
+                messages.success(request, 'Pomyślnie przywrócono zadanie!')
+            if end_time is not None and end_time >= start_time:
+                entry_details = form.save(commit=False)
+                entry_details.duration = end_time - start_time
+                entry_details.save()
+                messages.success(request, 'Pomyślnie zapisano zadanie!')
+            if end_time is not None and end_time < start_time:
+                messages.error(request, 'Data zakończenia musi być późniejsza od daty startu!')
+            return HttpResponseRedirect(reverse("entries:entries"))
+        else:
+            messages.warning(request, 'Błąd!')
     else:
         form = EditEntryForm(instance=entry_details, initial=initial_dict)
 

@@ -5,8 +5,6 @@ from django.utils.text import slugify
 
 
 # Create your models here.
-
-
 class ChceckAgeMixin:
     def is_from_current_week(self):
         current_date = date.today()
@@ -32,7 +30,7 @@ class Client(Timestamped):
     latitude = models.DecimalField(max_digits=10, decimal_places=7)
     longitude = models.DecimalField(max_digits=10, decimal_places=7)
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="clients")
-    active = models.BooleanField(default=True)
+    inactive = models.BooleanField(default=False)
     slug = models.SlugField(max_length=100, unique=True)
     logo = models.ImageField(upload_to='entries/logos/', blank=True, null=True)
 
@@ -49,10 +47,12 @@ class Entry(Timestamped):
     # start_date = models.DateField(default=datetime.today) #default=make_aware(datetime.now(), get_current_timezone()))
     start = models.DateTimeField(default=timezone.now) #default=make_aware(datetime.now(), get_current_timezone()))
     end = models.DateTimeField(blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, related_name="entries")
     user = models.ForeignKey("auth.User", on_delete=models.SET_DEFAULT, default=1, related_name="entries")
-    active = models.BooleanField(default=True)
+    inactive = models.BooleanField(default=False)
     tags = models.ManyToManyField("tags.Tag", related_name="entries", blank=True)
+    description = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         constraints = [

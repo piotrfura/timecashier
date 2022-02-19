@@ -50,7 +50,7 @@ class NewEntryForm(forms.ModelForm):
 class EditEntryForm(forms.ModelForm):
     class Meta:
         model = Entry
-        fields = ['start', 'end', 'client']
+        fields = ['start', 'end', 'client', 'description', 'inactive']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,15 +62,20 @@ class EditEntryForm(forms.ModelForm):
         self.fields['end'].label = 'Koniec'
         self.fields['end'].widget = forms.DateInput(attrs={'required': False, 'type': 'datetime-local'})
         self.fields['client'].label = 'Klient'
+        self.fields['description'].label = 'Opis'
+        self.fields['description'].widget = forms.Textarea()
+        self.fields['inactive'].label = 'Usuń'
 
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Column('start', css_class='col-sm'),
-                    Column('end', css_class='col-sm'),
-                    Column('client', css_class='col-sm'),
-                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger'),
-                    css_class='row'
+                    # Column('start', css_class='col-sm'),
+                    # Column('end', css_class='col-sm'),
+                    # Column('client', css_class='col-sm'),
+                    # Column('description', css_class='col-sm'),
+                    # Column('active', css_class='col-sm'),
+                    'start', 'end', 'client', 'description', 'inactive',
+                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger')
                 ),
                 css_class='container'
             )

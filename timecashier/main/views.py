@@ -6,6 +6,7 @@ from django.urls import reverse
 from datetime import date, datetime
 from django.http import JsonResponse
 from django.contrib import messages
+from datetime import timedelta, time
 
 # Create your views here.
 def index(request):
@@ -14,7 +15,8 @@ def index(request):
     }
     clients = Client.objects.all()
     clients_dist = {}
-    active_entries = Entry.objects.filter(user=request.user, end__isnull=True)
+    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False)
+    active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
 
     if request.method == "POST" and request.META.get(
             'HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
@@ -27,9 +29,19 @@ def index(request):
         form = NewEntryForm(request.POST)
         if form.is_valid() and len(active_entries) == 0:
             form.cleaned_data['user'] = request.user
-            entry = Entry.objects.create(**form.cleaned_data)
+            start_time = form.cleaned_data['start']
+            end_time = form.cleaned_data['end']
+            if end_time is None:
+                entry = Entry.objects.create(**form.cleaned_data)
+                messages.success(request, 'Pomyślnie rozpoczęto nowe zadanie!')
+            if end_time is not None and end_time >= start_time:
+                form.cleaned_data['duration'] = end_time - start_time
+                entry = Entry.objects.create(**form.cleaned_data)
+                messages.success(request, 'Pomyślnie dodano zadanie!')
+            if end_time is not None and end_time < start_time:
+                messages.error(request, 'Data zakończenia musi być późniejsza od daty startu!')
             return HttpResponseRedirect(reverse("main:index"))
-        else:
+        if len(active_entries) != 0:
             messages.error(request, 'Przed dodaniem kolejnego zadania musisz zakończyć poprzednie!')
 
     else:
@@ -37,7 +49,8 @@ def index(request):
 
     context = {
         "form": form,
-        "active_entries": active_entries
+        "active_entries": active_entries,
+        "entries": entries,
     }
 
     return render(request, 'main/index.html', context)
@@ -64,14 +77,3 @@ def client_nearby(request):
 
 def about(request):
     return render(request, 'main/about.html')
-
-def test(request):
-    task_list = ['Pranie', 'Sprzątanie', 'Praca', 'Jedzenie']
-    tekst = 'Jakiś tekst testowy tutaj dam...'
-    languages = {
-        'python': 'advanced',
-        'sql': 'intermediate',
-        'js': 'beginner'
-    }
-    context = {'tasks': task_list, 'text': tekst, 'languages':languages}
-    return render(request, 'main/test.html', context)

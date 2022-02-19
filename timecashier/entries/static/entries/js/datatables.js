@@ -1,7 +1,7 @@
 $(document).ready(function() {
     let table = new DataTable('#table_entries', {
         "pageLength":10,
-        "order": [[ 1, "desc" ], [ 2, "desc" ]],
+        "order": [[ 3, "desc" ]],
         dom: 'Bfrtip',
             buttons: [
                 'pageLength','copy', 'csv',
@@ -10,11 +10,20 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
     let table = new DataTable('#table_active_entries', {
-        "order": [[ 1, "desc" ]],
-        "pageLength":5,
+        "pageLength":1,
         "searching": false,
         "paging": false,
         "info": false,
         "lengthChange":false
+    });
+});
+$(document).ready(function() {
+    let table = new DataTable('#table_entries_last', {
+        "pageLength":3,
+        "order": [[ 3, "desc" ]],
+        "paging": true,
+        "searching": false,
+        "lengthChange":false,
+        "info": false,
     });
 });

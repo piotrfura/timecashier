@@ -12,9 +12,7 @@
     <thead><th></th><th>Lp.</th><th>Nazwa</th><th>Szerokość geograficzna</th><th>Długość geograficzna</th><th>Data dodania</th></thead>
     <tbody>
     {% for client in clients_list %}
-    {% if client.active %}
-    <tr><td>{% if client.active %} <i class="bi-check-circle green-icon"></i> {% else %} <i class="bi-x-circle red-icon"></i>{% endif %}</td><td>{{ client.id }}.</td><td><a href="{% url 'entries:client_details' client.slug %}">{{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
-    {% endif %}
+    <tr><td>{% if client.inactive %} <i class="bi-cross-circle red-icon"></i> {% else %} <i class="bi-check-circle green-icon"></i>{% endif %}</td><td>{{ client.id }}.</td><td><a href="{% url 'entries:client_details' client.slug %}">{{ client.name }}</a></td><td>{{ client.latitude }}</td><td>{{ client.longitude }}</td><td>{{ client.created }}</td></tr>
     {% endfor %}
     </tbody>
 </table>
