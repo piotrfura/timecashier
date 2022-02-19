@@ -23,7 +23,7 @@ function getLocation(){
     };
     function error(){
         console.log('Unable to retrieve location data');
-        $("#location").append('Unable to retrieve location data');
+        $("#mapslink").text('Nie udało się pobrać lokalizacji. Udostępnij lokalizację, bądź wybierz klienta ręcznie.');
     };
 
     function setLocation(){
