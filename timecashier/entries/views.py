@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from entries.models import Client, Entry, Location
-from main.forms import NewEntryForm, EditEntryForm
+from main.forms import NewEntryForm, EditEntryForm, EditClientForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import datetime
@@ -30,6 +30,38 @@ def client_details(request, client_slug):
     client_link = f'http://maps.google.com/maps?q= {client.latitude},{client.longitude}'
     context = {'client': client, 'client_link': client_link}
     return render(request, "entries/client_details.html", context)
+
+
+@login_required
+def client_edit(request, client_id):
+    client = get_object_or_404(Client, pk=client_id)
+    if request.method == "POST" and request.user.is_authenticated:
+        form = EditClientForm(request.POST, instance=client)
+        if form.is_valid():
+            client = form.save(commit=False)
+            client.save()
+            messages.success(request, 'Pomyślnie zapisano zmiany!')
+            return HttpResponseRedirect(reverse("entries:clients"))
+        else:
+            messages.error(request, 'Nie można zapisać zmian!')
+    else:
+        form = EditClientForm(instance=client)
+    return render(request, 'entries/client_edit.html', {'form': form, 'client_details': client})
+
+@login_required
+def client_add(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        form = EditClientForm(request.POST)
+        if form.is_valid():
+            client = Client.objects.create(**form.cleaned_data)
+            messages.success(request, 'Pomyślnie dodano klienta!')
+            return HttpResponseRedirect(reverse("entries:clients"))
+        else:
+            messages.error(request, 'Nie można zapisać zmian!')
+    else:
+        form = EditClientForm()
+    return render(request, 'entries/client_edit.html', {'form': form})
+
 
 @login_required
 def entry_save(request, entry_id):

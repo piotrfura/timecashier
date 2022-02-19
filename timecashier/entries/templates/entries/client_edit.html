@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
+
+{% block title %}Edycja klienta{% endblock %}
+
+{% block content %}
+
+{% if client_details %}
+<h2>Edycja klienta</h2>
+<p>Utworzono: {{ client_details.created}}, zmodyfikowano: {{ client_details.modified}}</p>
+{% else %}
+<h2>Dodaj klienta</h2>
+{% endif %}
+
+{% crispy form  %}
+
+{% endblock %}

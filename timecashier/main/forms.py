@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.admin import widgets
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, Column
-from entries.models import Entry
+from entries.models import Entry, Client
 from datetime import datetime
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -38,10 +38,10 @@ class NewEntryForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Column('start', css_class='col-sm'),
-                    Column('end', css_class='col-sm'),
-                    Column('client', css_class='col-sm'),
-                    Submit('submit', 'DODAJ', css_class='col-sm'),
+                    Column('client', css_class='col-md'),
+                    Column('start', css_class='col-md'),
+                    Column('end', css_class='col-md'),
+                    Submit('submit', 'DODAJ', css_class='col-md rounded-pill m-4'),
                     css_class='row'
                 ),
                 css_class='container'
@@ -71,18 +71,48 @@ class EditEntryForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
-                    # Column('start', css_class='col-sm'),
-                    # Column('end', css_class='col-sm'),
-                    # Column('client', css_class='col-sm'),
-                    # Column('description', css_class='col-sm'),
-                    # Column('active', css_class='col-sm'),
-                    'start', 'end', 'client', 'description', 'inactive',
+                    'start',
+                    'end',
+                    'client',
+                    'description',
+                    'inactive',
                     Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger')
                 ),
                 css_class='container'
             )
         )
 
+
+
+class EditClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['name', 'latitude', 'longitude', 'inactive']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = ''
+        self.fields['name'].label = 'Nazwa'
+        self.fields['latitude'].label = 'Szerokość geograficzna'
+        self.fields['latitude'].widget = forms.NumberInput(attrs={'step': 0.0000001, 'max': 90.0000000, 'min': -90.0000000})
+        self.fields['longitude'].label = 'Długość geograficzna'
+        self.fields['longitude'].widget = forms.NumberInput(attrs={'step': 0.0000001, 'max': 180.0000000, 'min': -180.0000000})
+        self.fields['inactive'].label = 'Usuń'
+
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    'name',
+                    'latitude',
+                    'longitude',
+                    'inactive',
+                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger')
+                ),
+                css_class='container'
+            )
+        )
 
 
 class LoginForm(AuthenticationForm):
