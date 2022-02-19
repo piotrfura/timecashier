@@ -30,30 +30,22 @@
     <link rel="icon" href="{% static 'main/images/favicon.ico' %}">
 </head>
 
-<body>
-    <div class="grid-container">
-        <nav class="navbar navbar-fixed-top navbar-expand navbar-dark bg-dark">
-            <ul class="navbar-nav">
-<!--                <li class="nav-item active"><a href="/"><img src="{% static 'images/timecashier_logo.png' %}" alt="TimeCashier"  style="max-width: 50px; height: auto;"></a></li>-->
-                <li class="nav-item active"><h3>TimeCashier</h3></a></li>
-                <li class="nav-item active"><button id="sidebarCollapse" class="btn"><span class="navbar-toggler-icon"></span></button></li>
-            </ul>
 
-
-<!--            <div class="navbar-nav ms-auto">-->
-<!--                {% if user.is_authenticated %}-->
-<!--                <a href="{% url 'logout' %}"><button type="button" class="btn btn-outline-light me-2">Wyloguj</button></a>-->
-<!--                {% else %}-->
-<!--                <a href="{% url 'main:index' %}"><button type="button" class="btn btn-primary me-2">Zaloguj</button></a>-->
-<!--                {% endif %}-->
-<!--            </div>-->
-
-        </nav>
-
-        <nav id="sidebar">
+<body style="padding-top:30px">
+    <div class="container-fluid ">
+<!--                <div style="row justify-content-center p-5 my-5">-->
+<!--            <div style="col">-->
+        <div class="col justify-content-center p-5 ">
+        <!-- Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start bg-dark" id="sidebar2">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">TimeCashier</h3>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
             <ul class="list-unstyled components ">
                 {% if user.is_authenticated %}
-                <li> <a href="{% url 'main:home' %}"><i class="bi-house-fill"></i> Dashboard</a> </li>
+<!--                <li> <a href="{% url 'main:home' %}"><i class="bi-house-fill"></i> Dashboard</a> </li>-->
                 <li> <a href="{% url 'entries:entries' %}"><i class="bi-clock-history"></i> Zadania</a> </li>
                 <li> <a href="{% url 'entries:clients' %}"><i class="bi-building"></i> Klienci</a> </li>
                 <li> <a href="{% url 'main:about' %}"><i class="bi-info-square"></i> O aplikacji</a> </li>
@@ -63,10 +55,32 @@
                 <li><a href="{% url 'main:index' %}"><i class="bi-box-arrow-in-right"></i> Zaloguj</a></li>
                 {% endif %}
             </ul>
-        </nav>
+        </div>
+    </div>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'main:home' %}">TimeCashier</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                  {% if user.is_authenticated %}
+        <!--            <li> <a class="nav-link active" href="{% url 'main:home' %}"><i class="bi-house-fill"></i> Dashboard</a> </li>-->
+                    <li> <a class="nav-link" href="{% url 'entries:entries' %}"><i class="bi-clock-history"></i> Zadania</a> </li>
+                    <li> <a class="nav-link" href="{% url 'entries:clients' %}"><i class="bi-building"></i> Klienci</a> </li>
+                    <li> <a class="nav-link" href="{% url 'main:about' %}"><i class="bi-info-square"></i> O aplikacji</a> </li>
+                    <li> <a class="nav-link" href="{% url 'main:about' %}"><i class="bi-person-square"></i> Profil</a> </li>
+                    <li style="border-bottom: 1px solid #fff"> <p></p> </li>
+                    <li><a class="nav-link" href="{% url 'logout' %}"><span class="bi-box-arrow-right red-icon"> Wyloguj</span></a></li>
+                    {% else %}
+                    <li><a class="nav-link" href="{% url 'main:index' %}"><span class="bi-box-arrow-in-right blue-icon"> Zaloguj</span></a></li>
+                    {% endif %}
+              </div>
+            </div>
+        </div>
+    </nav>
 
-
-        <div id="main">
 
             {% for message in messages %}
                 <div class="alert {{ message.tags }} alert-success alert-dismissible fade show" role="alert">
@@ -77,13 +91,14 @@
 
             {% block content %}
             {% endblock %}
-
+        </div>
             <div class="line"></div>
+
+        <div class="footer">
+            <div class="border-top text-muted">© 2022 TimeCashier</div>
         </div>
-        <div class="footer center">
-            <div class="border-top text-muted">© 2022 TimeCashier{% if user.is_authenticated %}<a href="{% url 'main:about' %}"> | About</a>{% endif %}</div>
-        </div>
-    </div>
+            </div>
+<!--    </div>-->
 
 </body>
 </html>
