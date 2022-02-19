@@ -96,4 +96,12 @@ class LoginForm(AuthenticationForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_action = ''
-        self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
+        # self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
+        self.helper.layout = Layout(
+            Div(
+                "username",
+                "password",
+                Submit('login', 'Zaloguj', css_class='btn-primary'),
+                css_class='class="col col-sm-4'
+            )
+        )

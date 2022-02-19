@@ -58,29 +58,22 @@
                 <li> <a href="{% url 'entries:clients' %}"><i class="bi-building"></i> Klienci</a> </li>
                 <li> <a href="{% url 'main:about' %}"><i class="bi-info-square"></i> O aplikacji</a> </li>
                 <li style="border-bottom: 1px solid #fff"> <p></p> </li>
-<!--                <li> <a href="{% url 'logout' %}"><i class="bi-box-arrow-right"></i> Wyloguj</a> </li>-->
                 <li><a href="{% url 'logout' %}"><i class="bi-box-arrow-right"></i> Wyloguj</a></li>
                 {% else %}
                 <li><a href="{% url 'main:index' %}"><i class="bi-box-arrow-in-right"></i> Zaloguj</a></li>
-<!--                <li><button type="button" class="btn btn-primary center">Wyloguj</button></li>-->
                 {% endif %}
             </ul>
         </nav>
 
 
         <div id="main">
-                    {% for message in messages %}
 
-<!--  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >-->
-<!--    <button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
-<!--      <span aria-hidden="True">&times;</span>-->
-<!--    </button>-->
-        <div class="alert {{ message.tags }} alert-success alert-dismissible fade show" role="alert">
-            <strong>{{ message }}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        {% endfor %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
 
             {% block content %}
             {% endblock %}
