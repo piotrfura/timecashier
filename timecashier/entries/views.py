@@ -16,7 +16,7 @@ def clients_list(request):
 
 
 def entries_list(request):
-    entries = Entry.objects.all().filter(user=request.user, inactive=False).order_by("-created")
+    entries = Entry.objects.all().filter(user=request.user, inactive=False, end__isnull=False).order_by("-created")
     # Entry.objects.annotate(duration=(ExpressionWrapper((F('end') - F('start')), output_field=DurationField())))
     context = {'entries_list': entries}
     return render(request, "entries/entries.html", context)
@@ -66,7 +66,7 @@ def entry_details(request, entry_id):
     if request.method == "POST" and request.user.is_authenticated:
         active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
         form = EditEntryForm(request.POST, instance=entry_details, initial=initial_dict)
-        if form.is_valid() and len(active_entries) <= 1:
+        if form.is_valid() and len(active_entries) == 0:
             start_time = form.cleaned_data['start']
             end_time = form.cleaned_data['end']
             if end_time is None:
@@ -82,8 +82,10 @@ def entry_details(request, entry_id):
             if end_time is not None and end_time < start_time:
                 messages.error(request, 'Data zakończenia musi być późniejsza od daty startu!')
             return HttpResponseRedirect(reverse("entries:entries"))
+        if form.is_valid() and len(active_entries) != 0:
+            messages.error(request, 'Nie można przywrócić zadania. Najpierw zakończ bieżące!')
         else:
-            messages.warning(request, 'Błąd!')
+            messages.warning(request, 'Błąd formularza!')
     else:
         form = EditEntryForm(instance=entry_details, initial=initial_dict)
 
