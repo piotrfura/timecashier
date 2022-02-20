@@ -100,6 +100,8 @@ def index(request):
         form = LoginForm()
     return render(request, 'main/index.html', {"form": form})
 
+
+@login_required
 def change_password(request):
     username = request.user
     if request.method == 'POST':
