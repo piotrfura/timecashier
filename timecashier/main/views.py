@@ -116,3 +116,7 @@ def change_password(request):
     return render(request, 'main/change_password.html', {
         'form': form, 'username': username,
     })
+
+def lockout(request, credentials, *args, **kwargs):
+    messages.error(request, 'Zbyt wiele prób logowania. Konto zostało zablokowane. Skontaktuj się z administratorem.')
+    return HttpResponseRedirect(reverse('main:index'))
