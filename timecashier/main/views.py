@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from entries.models import Client, Entry, Location
-from .forms import NewEntryForm, LoginForm
+from .forms import NewEntryForm, LoginForm, UserProfileForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import date, datetime
 from django.http import JsonResponse
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+
 from datetime import timedelta, time
 
 # Create your views here.
@@ -97,3 +99,20 @@ def index(request):
     else:
         form = LoginForm()
     return render(request, 'main/index.html', {"form": form})
+
+def change_password(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Hasło zostało poprawnie zmienione!')
+            return HttpResponseRedirect(reverse('main:home'))
+        else:
+            messages.error(request, 'Błąd!')
+    else:
+        form = UserProfileForm(request.user)
+        username = request.user
+    return render(request, 'main/change_password.html', {
+        'form': form, 'username': username,
+    })

@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, Column
 from entries.models import Entry, Client
 from datetime import datetime
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 
 
@@ -132,6 +132,29 @@ class LoginForm(AuthenticationForm):
                 "username",
                 "password",
                 Submit('login', 'Zaloguj', css_class='btn-primary'),
+                css_class='class="col col-sm-4'
+            )
+        )
+
+class UserProfileForm(PasswordChangeForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', "new_password1", "new_password2"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_action = ''
+        # self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
+        self.helper.layout = Layout(
+            Div(
+                "username",
+                "password",
+                "new_password1",
+                "new_password2",
+                Submit('submit', 'Zapisz', css_class='btn-primary'),
                 css_class='class="col col-sm-4'
             )
         )
