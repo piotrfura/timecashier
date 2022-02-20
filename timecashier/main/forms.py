@@ -38,10 +38,10 @@ class NewEntryForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
+                    Submit('submit', 'DODAJ', css_class='col-md rounded-pill m-4'),
                     Column('client', css_class='col-md'),
                     Column('start', css_class='col-md'),
                     Column('end', css_class='col-md'),
-                    Submit('submit', 'DODAJ', css_class='col-md rounded-pill m-4'),
                     css_class='row'
                 ),
                 css_class='container'
@@ -71,12 +71,12 @@ class EditEntryForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
+                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger'),
                     'start',
                     'end',
                     'client',
                     'description',
                     'inactive',
-                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger')
                 ),
                 css_class='container'
             )
@@ -129,10 +129,12 @@ class LoginForm(AuthenticationForm):
         # self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
         self.helper.layout = Layout(
             Div(
-                "username",
-                "password",
-                Submit('login', 'Zaloguj', css_class='btn-primary'),
-                css_class='class="col col-sm-4'
+                Div(
+                    "username",
+                    "password",
+                    Submit('login', 'Zaloguj', css_class='btn-primary'),
+                    css_class='class="col col-sm-4'
+                ),  css_class='container'
             )
         )
 
@@ -140,21 +142,20 @@ class UserProfileForm(PasswordChangeForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password', "new_password1", "new_password2"]
+        fields = ['old_password', "new_password1", "new_password2"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_action = ''
-        # self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
+        # self.helper.add_input(Submit('submit', 'Zapisz', css_class='btn-primary'))
         self.helper.layout = Layout(
             Div(
-                "username",
-                "password",
+                "old_password",
                 "new_password1",
                 "new_password2",
-                Submit('submit', 'Zapisz', css_class='btn-primary'),
+                Submit('submit', 'Zmień hasło', css_class='btn-danger'),
                 css_class='class="col col-sm-4'
             )
         )

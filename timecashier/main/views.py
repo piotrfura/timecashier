@@ -101,6 +101,7 @@ def index(request):
     return render(request, 'main/index.html', {"form": form})
 
 def change_password(request):
+    username = request.user
     if request.method == 'POST':
         form = UserProfileForm(request.user, request.POST)
         if form.is_valid():
@@ -109,10 +110,9 @@ def change_password(request):
             messages.success(request, 'Hasło zostało poprawnie zmienione!')
             return HttpResponseRedirect(reverse('main:home'))
         else:
-            messages.error(request, 'Błąd!')
+            messages.error(request, 'Wprowadzono błędne dane! Popraw i spróbuj ponownie.')
     else:
         form = UserProfileForm(request.user)
-        username = request.user
     return render(request, 'main/change_password.html', {
         'form': form, 'username': username,
     })
