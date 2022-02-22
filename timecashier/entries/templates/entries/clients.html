@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
 {% load static %}
-{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">
-{% endblock %}
 
 {% block title %}Klienci{% endblock %}
 
 {% block content %}
+
 <h2>Klienci</h2>
     <div class="row" style="margin-bottom: 10px;">
         <a href="{% url 'entries:client_add' %}">

@@ -18,7 +18,7 @@ def home(request):
     initial_dict = {
         "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
     }
-    clients = Client.objects.all()
+    clients = Client.objects.filter(inactive=False)
     clients_dist = {}
     entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False)
     active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
@@ -62,7 +62,7 @@ def home(request):
 
 @login_required
 def client_nearby(request):
-    clients = Client.objects.all()
+    clients = Client.objects.filter(inactive=False)
     clients_dist = {}
 
     longitude = request.GET.get('longitude')

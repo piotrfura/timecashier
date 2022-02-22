@@ -3,11 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% load static %}
-{% block style %}<link href="{% static 'entries/css/style.css' %}" rel="stylesheet">{% endblock %}
 
 {% block title %}Edycja klienta{% endblock %}
 
 {% block content %}
+
+{% csrf_token %}
+<script>getLocation()</script>
 
 {% if client_details %}
 <h2>Edycja klienta</h2>
