@@ -21,7 +21,6 @@ function getLocation(){
                 $("#mapslink").attr("href", `https://maps.google.com/maps?q=${latitude},${longitude}`);
             };
             if($('#id_latitude').length > 0 && $('#id_longitude').length > 0){
-                console.log($('#id_latitude').val() == '');
                 if($('#id_latitude').val() == ''){
                     $('#id_latitude').val(latitude.toFixed(7));
                     $('#id_longitude').val(longitude.toFixed(7));
