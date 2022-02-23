@@ -20,6 +20,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     let table = new DataTable('#table_active_entries', {
         "pageLength":1,
+        "sort": false,
         "searching": false,
         "paging": false,
         "info": false,

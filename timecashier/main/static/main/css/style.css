@@ -2,11 +2,17 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body, html {
-    background-color: #2b3238;
+   /* background-color: #2b3238;*/
     color: white;
     height:  100%;
     width: 100%;
     min-height: 100%;
+/* Created with https://www.css-gradient.com */
+/* Created with https://www.css-gradient.com */
+background: #2B3238;
+background: -webkit-linear-gradient(top left, #2B3238, #0C3D54);
+background: -moz-linear-gradient(top left, #2B3238, #0C3D54);
+background: linear-gradient(to bottom right, #2B3238, #0C3D54);
 
 }
 
@@ -46,4 +52,18 @@ a:focus {
 
 .blue-icon {
     color: #5479bc;
+}
+
+.panel-background {
+    border:0px;
+    border-radius: 30px;
+    background: rgba(139, 144, 148, 0.15);
+    padding: 15px;
+
+}
+
+.border_table {
+    border: 0px;
+    border-radius: 15px;
+    overflow: hidden;
 }

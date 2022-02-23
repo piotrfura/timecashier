@@ -71,7 +71,7 @@ class EditEntryForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger'),
+                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger rounded-pill', style='margin-bottom:20px'),
                     'start',
                     'end',
                     'client',
@@ -104,11 +104,11 @@ class EditClientForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
+                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger rounded-pill', style='margin-bottom:10px'),
                     'name',
                     'latitude',
                     'longitude',
                     'inactive',
-                    Submit('submit', 'ZAPISZ', css_class='col-sm btn-danger')
                 ),
                 css_class='container'
             )
@@ -126,13 +126,12 @@ class LoginForm(AuthenticationForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_action = ''
-        # self.helper.add_input(Submit('login', 'Zaloguj', css_class='btn-primary'))
         self.helper.layout = Layout(
             Div(
                 Div(
                     "username",
                     "password",
-                    Submit('login', 'Zaloguj', css_class='btn-primary'),
+                    Submit('login', 'Zaloguj', css_class='btn-primary rounded-pill'),
                     css_class='class="col col-sm-4'
                 ),  css_class='container'
             )
@@ -149,13 +148,12 @@ class UserProfileForm(PasswordChangeForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.form_action = ''
-        # self.helper.add_input(Submit('submit', 'Zapisz', css_class='btn-primary'))
         self.helper.layout = Layout(
             Div(
                 "old_password",
                 "new_password1",
                 "new_password2",
-                Submit('submit', 'Zmień hasło', css_class='btn-danger'),
+                Submit('submit', 'Zmień hasło', css_class='btn-danger rounded-pill', style='margin-top: 10px;'),
                 css_class='class="col col-sm-4'
             )
         )

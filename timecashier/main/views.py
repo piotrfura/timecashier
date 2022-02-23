@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from entries.models import Client, Entry, Location
 from .forms import NewEntryForm, LoginForm, UserProfileForm
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from datetime import date, datetime
@@ -15,13 +14,15 @@ from datetime import timedelta, time
 # Create your views here.
 @login_required
 def home(request):
-    initial_dict = {
-        "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
-    }
     clients = Client.objects.filter(inactive=False)
     clients_dist = {}
-    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('end')[0:5]
+    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('-end')[0:5]
     active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
+
+    initial_dict = {
+        "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
+        "client": clients,
+    }
 
     if request.method == "POST" and request.META.get(
             'HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
