@@ -20,7 +20,7 @@ def home(request):
     }
     clients = Client.objects.filter(inactive=False)
     clients_dist = {}
-    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False)
+    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('end')[0:5]
     active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
 
     if request.method == "POST" and request.META.get(
