@@ -8,10 +8,8 @@ function getLocation(){
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
 
-//        console.log(latitude + ' ' + longitude);
         loadLocationData();
         const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pl`;
-//        console.log(geoApiUrl);
 
         fetch(geoApiUrl)
         .then(res => res.json())
@@ -36,10 +34,7 @@ function getLocation(){
     };
 
     function setLocation(){
-//    $("#id_start_date").change(function () {
       var nearest_client = $("#id_client").val();
-//        var latitude = $("#latitude").val();
-//        var longitude = $("#longitude").val();
       $.ajax({
         url: '/ajax/client_nearby/',
         data: {
@@ -64,8 +59,6 @@ function getLocation(){
             longitude: longitude
         },
         success: function(){
-//            $('#id_latitude').val(latitude);
-//            $('#id_longitude').val(longitude);
             setLocation();
         }
 
