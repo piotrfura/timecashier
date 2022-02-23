@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8%ux0ht0itb%7f1gxhfie&&k+%#)sdb9$%=@o-#(act5*2@kl0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['timecashier.pl', 'www.timecashier.pl', 'localhost']
 
