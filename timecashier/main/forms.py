@@ -131,7 +131,7 @@ class LoginForm(AuthenticationForm):
                 Div(
                     "username",
                     "password",
-                    Submit('login', 'Zaloguj', css_class='btn-primary rounded-pill'),
+                    Submit('login', 'Zaloguj', css_class='btn-primary rounded-pill', style='margin-top: 10px;'),
                     css_class='class="col col-sm-4'
                 ),  css_class='container'
             )

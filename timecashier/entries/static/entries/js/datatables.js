@@ -8,12 +8,12 @@ $(document).ready(function() {
             ],
         "responsive": true,
         "columnDefs": [
-        { responsivePriority: 6, targets: 0 },
+        { responsivePriority: 5, targets: 0 },
         { responsivePriority: 1, targets: 1 },
-        { responsivePriority: 5, targets: 2 },
-        { responsivePriority: 2, targets: 3 },
+        { responsivePriority: 3, targets: 2 },
+        { responsivePriority: 3, targets: 3 },
         { responsivePriority: 4, targets: 4 },
-        { responsivePriority: 3, targets: 5 },
+        { responsivePriority: 2, targets: 5 },
     ]
     });
 });
