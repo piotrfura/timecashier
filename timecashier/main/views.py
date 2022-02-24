@@ -23,7 +23,6 @@ def home(request):
         "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
         "client": clients,
     }
-
     if request.method == "POST" and request.META.get(
             'HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
         longitude = request.POST.get('longitude')
@@ -81,9 +80,11 @@ def client_nearby(request):
     }
     return JsonResponse(data)
 
+
 @login_required
 def about(request):
     return render(request, 'main/about.html')
+
 
 def index(request):
     if request.method == 'POST':
@@ -91,7 +92,6 @@ def index(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            print(username)
             login(request, user)
             return HttpResponseRedirect(reverse("main:home"))
         if user is None:

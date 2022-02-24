@@ -34,6 +34,7 @@ class NewEntryForm(forms.ModelForm):
         self.fields['end'].label = 'Koniec'
         self.fields['end'].widget = forms.DateInput(attrs={'required': False, 'type': 'datetime-local'})
         self.fields['client'].label = 'Klient'
+        self.fields['client'].widget = forms.Select(choices=Client.objects.filter(inactive=False).values_list('id', 'name'))
 
         self.helper.layout = Layout(
             Div(
