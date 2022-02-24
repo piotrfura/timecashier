@@ -65,6 +65,7 @@ class EditEntryForm(forms.ModelForm):
         self.fields['end'].label = 'Koniec'
         self.fields['end'].widget = forms.DateInput(attrs={'required': False, 'type': 'datetime-local'})
         self.fields['client'].label = 'Klient'
+        self.fields['client'].widget = forms.Select(choices=Client.objects.filter(inactive=False).values_list('id', 'name'))
         self.fields['description'].label = 'Opis'
         self.fields['description'].widget = forms.Textarea()
         self.fields['inactive'].label = 'Usuń'
