@@ -5,3 +5,4 @@ db.sqlite3
 fixtures/
 media/
 static/
+settings.py
