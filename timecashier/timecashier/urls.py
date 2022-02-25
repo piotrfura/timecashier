@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from main.views import change_password
 
 urlpatterns = [
-    path('Yg2J5jsmDcXrvuvwVnXhr5PywNkCfu6i/', admin.site.urls),
+    path(settings.DJANGO_ADMIN_URL, admin.site.urls),
     path('', include('main.urls')),
     path('entries/', include('entries.urls')),
     # path('', include('register.urls')),
