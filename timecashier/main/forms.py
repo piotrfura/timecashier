@@ -89,7 +89,7 @@ class EditEntryForm(forms.ModelForm):
 class EditClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['name', 'latitude', 'longitude', 'inactive']
+        fields = ['name', 'latitude', 'longitude', 'inactive', 'logo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -110,6 +110,7 @@ class EditClientForm(forms.ModelForm):
                     'name',
                     'latitude',
                     'longitude',
+                    'logo',
                     'inactive',
                 ),
                 css_class='container'

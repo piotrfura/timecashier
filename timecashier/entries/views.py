@@ -34,7 +34,7 @@ def client_details(request, client_slug):
 def client_edit(request, client_id):
     client = get_object_or_404(Client, pk=client_id)
     if request.method == "POST" and request.user.is_authenticated:
-        form = EditClientForm(request.POST, instance=client)
+        form = EditClientForm(request.POST, request.FILES, instance=client)
         if form.is_valid():
             client = form.save(commit=False)
             client.save()
@@ -45,6 +45,9 @@ def client_edit(request, client_id):
     else:
         form = EditClientForm(instance=client)
     return render(request, 'entries/client_edit.html', {'form': form, 'client_details': client})
+
+
+
 
 @login_required
 def client_add(request):
