@@ -10,8 +10,8 @@ $(document).ready(function() {
         "columnDefs": [
         { responsivePriority: 5, targets: 0 },
         { responsivePriority: 1, targets: 1 },
-        { responsivePriority: 3, targets: 2 },
-        { responsivePriority: 3, targets: 3 },
+        { responsivePriority: 3, targets: 2, type: 'de_datetime' },
+        { responsivePriority: 3, targets: 3 , type: 'de_datetime'},
         { responsivePriority: 4, targets: 4 },
         { responsivePriority: 2, targets: 5 },
     ]
