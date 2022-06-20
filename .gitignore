@@ -7,3 +7,5 @@ fixtures/
 media/
 static/
 settings.py
+logs/
+
