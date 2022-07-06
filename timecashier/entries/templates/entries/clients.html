@@ -23,7 +23,7 @@
         <td><a href="{% url 'entries:client_details' client.slug %}">{{ client.name }}</a></td>
         <td>{{ client.latitude }}</td>
         <td>{{ client.longitude }}</td>
-        <td>{{ client.created|date:'Y-m-d H:m' }}</td>
+        <td>{{ client.created|date:'Y-m-d H:i' }}</td>
         <td>
             <a href="{% url 'entries:client_edit' client.id %}">
                 <i class="bi-pencil-square blue-icon"></i>

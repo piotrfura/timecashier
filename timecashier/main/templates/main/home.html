@@ -68,8 +68,8 @@
         <tr>
             <td><i class="bi-check-circle green-icon"></i></td>
             <td>{{ entry.client.name }}</td>
-            <td id="start">{{ entry.start|date:'Y-m-d H:m' }}</td>
-            <td id="end">{{ entry.end|date:'Y-m-d H:m' }}</td>
+            <td id="start">{{ entry.start|date:'Y-m-d H:i' }}</td>
+            <td id="end">{{ entry.end|date:'Y-m-d H:i' }}</td>
             <td id="duration" >{{ entry.duration }}</td>
             <td>
                 <a href="{% url 'entries:entry_details' entry.id %}">
