@@ -1,3 +1,4 @@
+.DS_Store
 .idea/
 pywwwenv/
 venv/
@@ -8,4 +9,4 @@ media/
 static/
 settings.py
 logs/
-
+.env

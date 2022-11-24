@@ -4,4 +4,4 @@ django-extensions==3.1.5
 django-import-export==2.7.1
 Faker==12.1.0
 django-axes==5.31.0
-
+Pillow==9.3.0
