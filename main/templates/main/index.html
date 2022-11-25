@@ -2,19 +2,11 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Logowanie{% endblock %}
+{% block title %}Logowanie -{% endblock %}
 
 {% block content %}
-<div class="col-md-8">
-<div class=".container-md">
 
-<div class="row justify-content-md-center">
+<h1 style="text-align: center;">Logowanie</h1>
+{% crispy form %}
 
-    <h1>Logowanie</h1>
-
-    {% crispy form  %}
-
-</div>
-</div>
-</div>
 {% endblock %}

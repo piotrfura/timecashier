@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.admin import widgets
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Div, Column
+from crispy_bootstrap5.bootstrap5 import FloatingField
 from entries.models import Entry, Client
 from datetime import datetime
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
@@ -131,14 +132,13 @@ class LoginForm(AuthenticationForm):
         self.helper.form_action = ''
         self.helper.layout = Layout(
             Div(
-                Div(
-                    "username",
-                    "password",
-                    Submit('login', 'Zaloguj', css_class='btn-primary rounded-pill', style='margin-top: 10px;'),
-                    css_class='class="col col-sm-4'
-                ),  css_class='container'
+                FloatingField("username"),
+                FloatingField("password"),
+                Submit('login', 'Zaloguj', css_class='btn-primary rounded-pill w-100', style='margin-top: 10px;'),
+                css_class='container col col-md-4 justify-content-center panel-background'
             )
         )
+
 
 class UserProfileForm(PasswordChangeForm):
 
@@ -153,10 +153,10 @@ class UserProfileForm(PasswordChangeForm):
         self.helper.form_action = ''
         self.helper.layout = Layout(
             Div(
-                "old_password",
-                "new_password1",
-                "new_password2",
-                Submit('submit', 'Zmień hasło', css_class='btn-danger rounded-pill', style='margin-top: 10px;'),
-                css_class='class="col col-sm-4'
+                FloatingField("old_password"),
+                FloatingField("new_password1"),
+                FloatingField("new_password2"),
+                Submit('submit', 'Zmień hasło', css_class='btn-danger rounded-pill w-100', style='margin-top: 10px;'),
+                css_class='container col col-md-4 justify-content-center panel-background'
             )
         )
