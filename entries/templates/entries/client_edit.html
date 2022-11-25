@@ -9,17 +9,21 @@
 {% block content %}
 
 {% csrf_token %}
-<script>getLocation()</script>
+
 
 {% if client_details %}
-<h2>Edycja klienta</h2>
-<p>Utworzono: {{ client_details.created}}, zmodyfikowano: {{ client_details.modified}}</p>
+<h1>Edycja klienta</h1>
+<div style="text-align: center; margin-top:30px; margin-bottom:30px">
+    <span>Utworzono: {{ client_details.created}}<br>Zmodyfikowano: {{ client_details.modified}}</span>
+</div>
+<p></p>
 {% else %}
-<h2>Dodaj klienta</h2>
+<h1>Dodaj klienta</h1>
 {% endif %}
 
-<div class="panel-background">
-    {% crispy form  %}
-</div>
+{% crispy form  %}
 
+{% endblock %}
+{% block additional_scripts %}
+<script>getLocation()</script>
 {% endblock %}
