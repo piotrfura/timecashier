@@ -1,0 +1,4 @@
+-r ./base.txt
+
+django-debug-toolbar
+Faker==12.1.0
