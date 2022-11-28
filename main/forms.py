@@ -39,7 +39,7 @@ class NewEntryForm(forms.ModelForm):
 
         self.helper.layout = Layout(
             Div(
-                Submit('submit', 'DODAJ', css_class='btn-primary rounded-pill w-100', style='margin-bottom:20px'),
+                Submit('submit', 'DODAJ', css_class='btn-time-primary rounded-pill w-100', style='margin-bottom:20px'),
                 Column(FloatingField('client', css_class='col-md')),
                 Column(FloatingField('start', css_class='col-md')),
                 Column(FloatingField('end', css_class='col-md')),
@@ -71,7 +71,7 @@ class EditEntryForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Submit('submit', 'ZAPISZ', css_class='btn-primary rounded-pill w-100', style='margin-bottom:20px'),
+                    Submit('submit', 'ZAPISZ', css_class='btn-time-primary rounded-pill w-100', style='margin-bottom:20px'),
                     FloatingField('start'),
                     FloatingField('end'),
                     FloatingField('client'),
@@ -103,7 +103,7 @@ class EditClientForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Submit('submit', 'ZAPISZ', css_class='btn-primary rounded-pill w-100', style='margin-bottom:10px'),
+                    Submit('submit', 'ZAPISZ', css_class='btn-time-primary rounded-pill w-100', style='margin-bottom:10px'),
                     FloatingField('name'),
                     FloatingField('latitude'),
                     FloatingField('longitude'),
@@ -130,8 +130,8 @@ class LoginForm(AuthenticationForm):
             Div(
                 FloatingField("username"),
                 FloatingField("password"),
-                Submit('login', 'Zaloguj', css_class='btn-primary rounded-pill w-100', style='margin-top: 10px;'),
-                css_class='container col col-md-4 justify-content-center panel-background shadow'
+                Submit('login', 'Zaloguj', css_class='btn-time-primary rounded-pill w-100', style='margin-top: 10px;'),
+                css_class='container col col-md-4 justify-content-center panel-background shadow p-3',
             )
         )
 
@@ -152,7 +152,7 @@ class UserProfileForm(PasswordChangeForm):
                 FloatingField("old_password"),
                 FloatingField("new_password1"),
                 FloatingField("new_password2"),
-                Submit('submit', 'Zmień hasło', css_class='btn-primary rounded-pill w-100', style='margin-top: 10px; margin-bottom: 10px;'),
+                Submit('submit', 'Zmień hasło', css_class='btn-time-primary rounded-pill w-100', style='margin-top: 10px; margin-bottom: 10px;'),
                 css_class='container col col-md-6 justify-content-center panel-background shadow'
             )
         )
