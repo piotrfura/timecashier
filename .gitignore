@@ -4,9 +4,8 @@ pywwwenv/
 venv/
 __pycache__
 db.sqlite3
+timecashier.db
 fixtures/
 media/
-static/
-settings.py
 logs/
 .env
