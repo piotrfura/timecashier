@@ -9,5 +9,5 @@ Faker==12.1.0
 pylint-django==2.5.3 # https://github.com/PyCQA/pylint-django
 black==22.10.0  # https://github.com/ambv/black
 flake8==6.0.0  # https://github.com/PyCQA/flake8
+pre-commit==2.20.0  # https://github.com/pre-commit/pre-commit
 # coverage==5.3  # https://github.com/nedbat/coveragepy
-# pre-commit==2.7.1  # https://github.com/pre-commit/pre-commit
