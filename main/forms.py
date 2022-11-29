@@ -1,12 +1,16 @@
-from django import forms
-from django.contrib.admin import widgets
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Div, Column
 from crispy_bootstrap5.bootstrap5 import FloatingField
-from entries.models import Entry, Client
-from datetime import datetime
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column
+from crispy_forms.layout import Div
+from crispy_forms.layout import Layout
+from crispy_forms.layout import Submit
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
+
+from entries.models import Client
+from entries.models import Entry
 
 
 class LocationForm(forms.Form):

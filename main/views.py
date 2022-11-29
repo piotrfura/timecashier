@@ -1,21 +1,26 @@
-from django.shortcuts import render
-from entries.models import Client, Entry, Location
-from .forms import NewEntryForm, LoginForm, UserProfileForm
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from datetime import date, datetime
-from django.http import JsonResponse
+from datetime import datetime
+
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.urls import reverse
 
-from datetime import timedelta, time
+from .forms import LoginForm
+from .forms import NewEntryForm
+from .forms import UserProfileForm
+from entries.models import Client
+from entries.models import Entry
+from entries.models import Location
 
-# Create your views here.
+
 @login_required
 def home(request):
     clients = Client.objects.filter(inactive=False)
-    clients_dist = {}
     entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('-end')[0:5]
     active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
 
@@ -27,7 +32,7 @@ def home(request):
             'HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
         longitude = request.POST.get('longitude')
         latitude = request.POST.get('latitude')
-        location = Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
+        Location.objects.create(longitude=longitude, latitude=latitude, user=request.user)
 
     if request.method == "POST" and request.user.is_authenticated:
 
@@ -37,11 +42,11 @@ def home(request):
             start_time = form.cleaned_data['start']
             end_time = form.cleaned_data['end']
             if end_time is None:
-                entry = Entry.objects.create(**form.cleaned_data)
+                Entry.objects.create(**form.cleaned_data)
                 messages.success(request, 'Pomyślnie rozpoczęto nowe zadanie!')
             if end_time is not None and end_time >= start_time:
                 form.cleaned_data['duration'] = end_time - start_time
-                entry = Entry.objects.create(**form.cleaned_data)
+                Entry.objects.create(**form.cleaned_data)
                 messages.success(request, 'Pomyślnie dodano zadanie!')
             if end_time is not None and end_time < start_time:
                 messages.error(request, 'Data zakończenia musi być późniejsza od daty startu!')
@@ -59,6 +64,7 @@ def home(request):
     }
 
     return render(request, 'main/home.html', context)
+
 
 @login_required
 def client_nearby(request):
@@ -119,6 +125,7 @@ def change_password(request):
     return render(request, 'main/change_password.html', {
         'form': form, 'username': username,
     })
+
 
 def lockout(request, credentials, *args, **kwargs):
     messages.error(request, 'Zbyt wiele prób logowania. Konto zostało zablokowane. Skontaktuj się z administratorem.')

@@ -9,11 +9,10 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
 from pathlib import Path
-from django.contrib.messages import constants as messages
 
 import environ
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,7 +135,7 @@ LANGUAGE_CODE = 'pl-pl'
 TIME_ZONE = 'Europe/Warsaw'
 
 # DATE_FORMAT = "%Y-%m-%d %H:%M"
-DATE_INPUT_FORMATS = ("%Y-%m-%d %H:%M")#, '%d.%m.%Y', '%Y.%m.%d')
+DATE_INPUT_FORMATS = "%Y-%m-%d %H:%M"
 
 L10N = True
 

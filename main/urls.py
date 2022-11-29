@@ -1,5 +1,10 @@
-from django.urls import path, include
-from .views import home, index, about, client_nearby, change_password
+from django.urls import path
+
+from .views import about
+from .views import change_password
+from .views import client_nearby
+from .views import home
+from .views import index
 
 app_name = 'main'
 

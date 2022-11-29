@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import clients_list, entries_list, client_details, entry_details, entry_save, client_edit, client_add
+
+from .views import client_add
+from .views import client_details
+from .views import client_edit
+from .views import clients_list
+from .views import entries_list
+from .views import entry_details
+from .views import entry_save
 
 app_name = 'entries'
 

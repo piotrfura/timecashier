@@ -2,12 +2,13 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ExportMixin
 
-from .models import Client, Entry
+from .models import Client
+from .models import Entry
 
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "latitude", "longitude", "user","created", "modified", "inactive"]
+    list_display = ["id", "name", "latitude", "longitude", "user", "created", "modified", "inactive"]
     search_fields = ["name"]
     list_filter = ["user", "inactive"]
     prepopulated_fields = {"slug": ("name",)}

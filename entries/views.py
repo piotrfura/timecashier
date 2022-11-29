@@ -1,13 +1,16 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.urls import reverse
 
-from entries.models import Client, Entry
-from main.forms import EditEntryForm, EditClientForm
+from entries.models import Client
+from entries.models import Entry
+from main.forms import EditClientForm
+from main.forms import EditEntryForm
 
 
 @login_required
