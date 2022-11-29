@@ -7,10 +7,14 @@ repos:
     rev: v3.2.0
     hooks:
       - id: trailing-whitespace
-        files: (^|/)a/.+\.(py|html|sh|css|js)$
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
+
+-   repo: https://github.com/asottile/reorder_python_imports
+    rev: v3.9.0
+    hooks:
+    -   id: reorder-python-imports
 
 -   repo: local
     hooks:
