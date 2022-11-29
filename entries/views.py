@@ -75,9 +75,9 @@ def client_add(request):
 
 @login_required
 def entry_save(request, entry_id):
-    entry_details = get_object_or_404(Entry, pk=entry_id)
+    entry = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {
-        "start": entry_details.start.strftime("%Y-%m-%dT%H:%M"),
+        "start": entry.start.strftime("%Y-%m-%dT%H:%M"),
         "end": datetime.now().strftime("%Y-%m-%dT%H:%M"),
     }
 
@@ -85,21 +85,21 @@ def entry_save(request, entry_id):
         active_entries = Entry.objects.filter(
             user=request.user, inactive=False, end__isnull=True
         )
-        form = EditEntryForm(request.POST, instance=entry_details, initial=initial_dict)
+        form = EditEntryForm(request.POST, instance=entry, initial=initial_dict)
         if form.is_valid():
             start_time = form.cleaned_data["start"]
             end_time = form.cleaned_data["end"]
 
             if len(active_entries) <= 1 and end_time is None:
-                entry_details = form.save(commit=False)
-                entry_details.duration = None
-                entry_details.save()
+                entry = form.save(commit=False)
+                entry.duration = None
+                entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time >= start_time:
-                entry_details = form.save(commit=False)
-                entry_details.duration = end_time - start_time
-                entry_details.save()
+                entry = form.save(commit=False)
+                entry.duration = end_time - start_time
+                entry.save()
                 messages.success(request, "Pomyślnie zakończono zadanie!")
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time < start_time:
@@ -120,33 +120,33 @@ def entry_save(request, entry_id):
                 reverse("entries:entry_save", kwargs={"entry_id": entry_id})
             )
     else:
-        form = EditEntryForm(instance=entry_details, initial=initial_dict)
+        form = EditEntryForm(instance=entry, initial=initial_dict)
 
-        context = {"entry_details": entry_details, "form": form}
+        context = {"entry_details": entry, "form": form}
         return render(request, "entries/entry_details.html", context)
 
 
 @login_required
 def entry_details(request, entry_id):
-    entry_details = get_object_or_404(Entry, pk=entry_id)
+    entry = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {
-        "start": entry_details.start.strftime("%Y-%m-%dT%H:%M"),
-        "end": entry_details.end.strftime("%Y-%m-%dT%H:%M"),
+        "start": entry.start.strftime("%Y-%m-%dT%H:%M"),
+        "end": entry.end.strftime("%Y-%m-%dT%H:%M"),
     }
 
     if request.method == "POST" and request.user.is_authenticated:
         active_entries = Entry.objects.filter(
             user=request.user, inactive=False, end__isnull=True
         )
-        form = EditEntryForm(request.POST, instance=entry_details, initial=initial_dict)
+        form = EditEntryForm(request.POST, instance=entry, initial=initial_dict)
         if form.is_valid():
             start_time = form.cleaned_data["start"]
             end_time = form.cleaned_data["end"]
 
             if len(active_entries) == 0 and end_time is None:
-                entry_details = form.save(commit=False)
-                entry_details.duration = None
-                entry_details.save()
+                entry = form.save(commit=False)
+                entry.duration = None
+                entry.save()
                 messages.success(request, "Pomyślnie przywrócono zadanie!")
                 return HttpResponseRedirect(reverse("main:home"))
 
@@ -167,9 +167,9 @@ def entry_details(request, entry_id):
                 )
 
             if end_time is not None and end_time >= start_time:
-                entry_details = form.save(commit=False)
-                entry_details.duration = end_time - start_time
-                entry_details.save()
+                entry = form.save(commit=False)
+                entry.duration = end_time - start_time
+                entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
                 return HttpResponseRedirect(reverse("entries:entries"))
 
@@ -179,8 +179,7 @@ def entry_details(request, entry_id):
                 reverse("entries:entry_details", kwargs={"entry_id": entry_id})
             )
     else:
+        form = EditEntryForm(instance=entry, initial=initial_dict)
+        context = {"entry_details": entry, "form": form}
 
-        form = EditEntryForm(instance=entry_details, initial=initial_dict)
-
-        context = {"entry_details": entry_details, "form": form}
-        return render(request, "entries/entry_details.html", context)
+    return render(request, "entries/entry_details.html", context)

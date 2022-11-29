@@ -11,6 +11,4 @@ urlpatterns = [
     path('clients/edit/add/', client_add, name='client_add'),
     path('entries/<int:entry_id>', entry_details, name='entry_details'),
     path('entries/save/<int:entry_id>', entry_save, name='entry_save'),
-    # path('entries/<int:entry_id>/entry', entry_details, name='entry_details'),
-
 ]
