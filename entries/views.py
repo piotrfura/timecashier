@@ -10,7 +10,6 @@ from entries.models import Client, Entry
 from main.forms import EditEntryForm, EditClientForm
 
 
-
 @login_required
 def clients_list(request):
     clients = Client.objects.filter(inactive=False)
