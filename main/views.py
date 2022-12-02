@@ -20,13 +20,11 @@ from entries.models import Location
 
 @login_required
 def home(request):
-    clients = Client.objects.filter(inactive=False)
-    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('-end')[0:5]
-    active_entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True)
-
+    entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('-end').all()[0:5]
+    active_entry = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True).order_by('-start')[:1]
+    print(active_entry)
     initial_dict = {
         "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
-        "client": clients,
     }
     if request.method == "POST" and request.META.get(
             'HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.user.is_authenticated:
@@ -37,7 +35,7 @@ def home(request):
     if request.method == "POST" and request.user.is_authenticated:
 
         form = NewEntryForm(request.POST)
-        if form.is_valid() and len(active_entries) == 0:
+        if form.is_valid() and len(active_entry) == 0:
             form.cleaned_data['user'] = request.user
             start_time = form.cleaned_data['start']
             end_time = form.cleaned_data['end']
@@ -51,7 +49,7 @@ def home(request):
             if end_time is not None and end_time < start_time:
                 messages.error(request, 'Data zakończenia musi być późniejsza od daty startu!')
             return HttpResponseRedirect(reverse("main:home"))
-        if len(active_entries) != 0:
+        if len(active_entry) != 0:
             messages.error(request, 'Przed dodaniem kolejnego zadania musisz zakończyć poprzednie!')
 
     else:
@@ -59,7 +57,7 @@ def home(request):
 
     context = {
         "form": form,
-        "active_entries": active_entries,
+        "active_entry": active_entry,
         "entries": entries,
     }
 
