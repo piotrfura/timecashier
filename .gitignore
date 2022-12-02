@@ -5,7 +5,7 @@ venv/
 __pycache__
 db.sqlite3
 timecashier.db
-fixtures/
+*db.json
 media/
 logs/
 .env

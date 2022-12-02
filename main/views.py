@@ -22,7 +22,6 @@ from entries.models import Location
 def home(request):
     entries = Entry.objects.filter(user=request.user, inactive=False, end__isnull=False).order_by('-end').all()[0:5]
     active_entry = Entry.objects.filter(user=request.user, inactive=False, end__isnull=True).order_by('-start')[:1]
-    print(active_entry)
     initial_dict = {
         "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
     }

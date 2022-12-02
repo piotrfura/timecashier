@@ -2,6 +2,8 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -97,12 +99,16 @@ def entry_save(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
+                key = make_template_fragment_key('entries', [request.user.username])
+                cache.delete(key)  # invalidates cached template fragment
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time >= start_time:
                 entry = form.save(commit=False)
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zakończono zadanie!")
+                key = make_template_fragment_key('entries', [request.user.username])
+                cache.delete(key)
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time < start_time:
                 messages.error(
@@ -150,6 +156,8 @@ def entry_details(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie przywrócono zadanie!")
+                key = make_template_fragment_key('entries', [request.user.username])
+                cache.delete(key)
                 return HttpResponseRedirect(reverse("main:home"))
 
             if len(active_entries) != 0 and end_time is None:
@@ -173,6 +181,8 @@ def entry_details(request, entry_id):
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
+                key = make_template_fragment_key('entries', [request.user.username])
+                cache.delete(key)
                 return HttpResponseRedirect(reverse("entries:entries"))
 
         else:

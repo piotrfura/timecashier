@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load cache %}
 
 {% block title %}Zadania -{% endblock %}
 
 {% block content %}
 
-<h1>Zadania</h2>
+{% cache 500 entries request.user.username %}
+
+<h1>Zadania</h1>
 
 <div class="row container col justify-content-center panel-background shadow">
     <table id="table_entries" class="table table-striped table-light dt-responsive nowrap border_table" style="width:100%">
@@ -29,4 +32,5 @@
         </tbody>
     </table>
 </div>
+{% endcache %}
 {% endblock %}
