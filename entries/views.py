@@ -29,7 +29,6 @@ def entries_list(request):
         .filter(user=request.user, inactive=False, end__isnull=False)
         .order_by("-created")
     )
-    # Entry.objects.annotate(duration=(ExpressionWrapper((F('end') - F('start')), output_field=DurationField())))
     context = {"entries_list": entries}
     return render(request, "entries/entries.html", context)
 
@@ -99,7 +98,7 @@ def entry_save(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
-                key = make_template_fragment_key('entries', [request.user.username])
+                key = make_template_fragment_key("entries", [request.user.username])
                 cache.delete(key)  # invalidates cached template fragment
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time >= start_time:
@@ -107,7 +106,7 @@ def entry_save(request, entry_id):
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zakończono zadanie!")
-                key = make_template_fragment_key('entries', [request.user.username])
+                key = make_template_fragment_key("entries", [request.user.username])
                 cache.delete(key)
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time < start_time:
@@ -156,7 +155,7 @@ def entry_details(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie przywrócono zadanie!")
-                key = make_template_fragment_key('entries', [request.user.username])
+                key = make_template_fragment_key("entries", [request.user.username])
                 cache.delete(key)
                 return HttpResponseRedirect(reverse("main:home"))
 
@@ -181,7 +180,7 @@ def entry_details(request, entry_id):
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
-                key = make_template_fragment_key('entries', [request.user.username])
+                key = make_template_fragment_key("entries", [request.user.username])
                 cache.delete(key)
                 return HttpResponseRedirect(reverse("entries:entries"))
 
