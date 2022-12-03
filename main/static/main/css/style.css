@@ -4,13 +4,13 @@
 body {
     background-color: #f2f2f2;
     position: relative;
-    padding-top: 100px;
+    padding-top: 60px;
     color: #585858;
     height:  100%;
     width: 100%;
     min-height: 100%;
     min-height: 100vh;
-    padding-bottom: 60px;
+    padding-bottom: 50px;
     overflow: auto;
 }
 .navbar{
@@ -40,7 +40,7 @@ body {
 }
 
 .page-content {
-    padding: 20px;
+    padding: 0.5rem;
 }
 
 .footer {
@@ -101,15 +101,23 @@ a:focus {
     border:0px;
     border-radius: 10px;
     background: #dcdede;
-    padding: 20px;
+    padding: 10px;
     text-align: justify;
-    margin-bottom: 20px;
+}
+.row {
+    margin: 0;
 }
 
 .border_table {
     border: 0px;
     border-radius: 5px;
     overflow: hidden;
+}
+
+td a {
+    display: block;
+    text-decoration: none;
+    color: black;
 }
 
 .breathingForm {
@@ -152,4 +160,20 @@ input + label {
   --bs-btn-active-color: #585858;
   --bs-btn-active-bg: transparent;
   --bs-btn-active-border-color: white;
+}
+.pagination>li>a,
+.pagination>li>span {
+    color: black;
+}
+.pagination>li>a:hover {
+    background-color: #52ab98;
+    color: #fff;
+    border: solid;
+    border-color: #52ab98;
+}
+.pagination>li.active>a {
+  background: #2b6777;
+  color: #fff;
+  border: solid;
+  border-color: #2b6777;
 }

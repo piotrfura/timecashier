@@ -8,11 +8,6 @@
 
 {% block content %}
 
-{% csrf_token %}
-
-
-
-
 {% if active_entry %}
 {% with active_entry|first as active_entry %}
 <h4>Aktywne zadanie</h4>
@@ -36,6 +31,7 @@
 </div>
 {% endwith %}
 {% else %}
+    <h4>Nowe zadanie</h4>
     <a id="mapslink" target="_blank" style="font-size: 0.75rem"></a>
     {% crispy form %}
 {% endif %}
@@ -69,6 +65,10 @@
     </table>
 </div>
 {% endblock %}
+
 {% block additional_scripts %}
-<script>getLocation()</script>
+    {% if not active_entry %}
+        {% csrf_token %}
+        <script>getLocation()</script>
+    {% endif %}
 {% endblock %}

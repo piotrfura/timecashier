@@ -1,13 +1,37 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% load crispy_forms_tags %}
 
 {% block title %}Logowanie -{% endblock %}
 
 {% block content %}
+<div class="container">
+<div class="row">
+    <div class="col-md justify-content-center align-self-center">
+        <img src="{% static 'main/images/timecashier_logo.png' %}" alt="TimeCashier" class="rounded mx-auto d-block" style="max-width: 50%; height: auto; min-width: 150px;">
 
-<h1 style="text-align: center;">Logowanie</h1>
-<br>
-{% crispy form %}
+        <h2 class="text-center m-4">TimeCashier służy do rejestrowania czasu pracy spędzonego u klientów na podstawie bieżącej lokalizacji użytkownika</h2>
+    </div>
 
+<div class="col-md justify-content-center panel-background shadow">
+<ul>
+    <li>Automatyczne pobieranie lokalizacji zalogowanego użytkownika przy wejściu na Dashboard aplikacji</li>
+    <li>Dashboard - sprawdzenie aktualnego położenia na mapie - link pod nagłówkiem</li>
+    <li>Dashboard - dodawanie nowego zadania dla Klienta znajdującego się najbliżej, z bieżącą datą startu <b><i>jednym kliknięciem</i></b></li>
+    <li>Dashboard - zakończenie aktywnego zadania, wraz z możliwością dodania opcjonalnego opisu (do 500 znaków)</li>
+    <li>Klienci - edycja i dodawanie nowych klientów</li>
+    <li>Klienci - automatyczne podpowiadanie bieżącej lokalizacji przy dodawaniu nowego klienta</li>
+    <li>Klienci - podgląd lokalizacji klienta na mapie po kliknięciu w nazwę klienta</li>
+    <li>Zadania - możliwość filtrowania zadań po kliencie i skopiowania do schowka, bądź pobrania wybranych rekordów do pliku csv</li>
+    <li>Zadania - możliwość edycji i usuwania zakończonych zadań</li>
+    <li>Zadania - walidacja dat i komunikaty o błędach</li>
+    <li>Logowanie - możliwość zmiany hasła użytkownika</li>
+    <li>Logowanie - automatyczne blokowanie adresu po kilku nieudanych próbach logowania</li>
+</ul>
+
+</div>
+</div>
+</div>
 {% endblock %}

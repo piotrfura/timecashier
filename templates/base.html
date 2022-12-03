@@ -7,7 +7,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.4/b-2.2.2/r-2.2.9/sb-1.3.1/sp-1.4.0/datatables.min.css"/>
     <link href="{% static 'main/css/style.css' %}" rel="stylesheet">
 
     {% block style %}{% endblock %}
@@ -24,9 +23,13 @@
     <div class="container" id="body-container">
         <nav class="navbar fixed-top navbar-expand-sm navbar" id="navbar-header" >
             <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'main:home' %}">
+            <a class="navbar-brand"
+                {% if user.is_authenticated %}
+                    href="{% url 'main:home' %}">
+                {% else %}
+                    href="{% url 'main:index' %}">
+                {% endif%}
                 <span style="font-weight:800;">TimeCashier</span>
-
             </a>
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -36,12 +39,11 @@
                     {% if user.is_authenticated %}
                     <li class="nav-item mx-auto"> <a class="nav-link" href="{% url 'entries:entries' %}"><i class="bi-clock-history"></i> Zadania</a> </li>
                     <li class="nav-item mx-auto"> <a class="nav-link" href="{% url 'entries:clients' %}"><i class="bi-building"></i> Klienci</a> </li>
-                    <li class="nav-item mx-auto"> <a class="nav-link" href="{% url 'main:about' %}"><i class="bi-info-square"></i> O aplikacji</a> </li>
                     <li class="nav-item mx-auto"> <a class="nav-link" href="{% url 'main:change_password' %}"}><i class="bi-person-square"></i> Profil</a> </li>
                     <li style="border-bottom: 1px solid #2b6777"> <p></p> </li>
-                    <li class="nav-item logout mx-auto "><a class="nav-link" href="{% url 'logout' %}"><span class="bi-box-arrow-right red-icon"> Wyloguj</span></a></li>
+                    <li class="nav-item logout mx-auto "><a class="nav-link" href="{% url 'main:logout' %}"><span class="bi-box-arrow-right red-icon"> Wyloguj</span></a></li>
                     {% else %}
-                    <li><a class="nav-link" href="{% url 'main:index' %}"><span class="bi-box-arrow-in-right blue-icon"> Zaloguj</span></a></li>
+                    <li class="nav-item mx-auto"><a class="nav-link" href="{% url 'main:login' %}"><span class="bi-box-arrow-in-right blue-icon"> Zaloguj</span></a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -67,10 +69,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 	<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.4/b-2.2.2/r-2.2.9/sb-1.3.1/sp-1.4.0/datatables.min.js"></script>
 
     <script src="{% static 'entries/js/main.js' %}"></script>
-    <script src="{% static 'entries/js/datatables.js' %}"></script>
     <script type="text/javascript">
         setTimeout(function () {
             $('.alert').alert('close');

@@ -1,9 +1,8 @@
+import json
 from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
-from django.core.cache.utils import make_template_fragment_key
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -27,9 +26,13 @@ def entries_list(request):
     entries = (
         Entry.objects.all()
         .filter(user=request.user, inactive=False, end__isnull=False)
-        .order_by("-created")
+        .order_by("-end")
     )
-    context = {"entries_list": entries}
+    fields = ["id", "client__name", "start", "end", "duration"]
+    entries = entries.values(*fields)
+    entries_json = entries_to_json(list(entries))
+
+    context = {"entries_list": entries, "entries_json": entries_json}
     return render(request, "entries/entries.html", context)
 
 
@@ -98,16 +101,12 @@ def entry_save(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
-                key = make_template_fragment_key("entries", [request.user.username])
-                cache.delete(key)  # invalidates cached template fragment
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time >= start_time:
                 entry = form.save(commit=False)
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zakończono zadanie!")
-                key = make_template_fragment_key("entries", [request.user.username])
-                cache.delete(key)
                 return HttpResponseRedirect(reverse("main:home"))
             if end_time is not None and end_time < start_time:
                 messages.error(
@@ -155,8 +154,6 @@ def entry_details(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie przywrócono zadanie!")
-                key = make_template_fragment_key("entries", [request.user.username])
-                cache.delete(key)
                 return HttpResponseRedirect(reverse("main:home"))
 
             if len(active_entries) != 0 and end_time is None:
@@ -180,8 +177,6 @@ def entry_details(request, entry_id):
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
-                key = make_template_fragment_key("entries", [request.user.username])
-                cache.delete(key)
                 return HttpResponseRedirect(reverse("entries:entries"))
 
         else:
@@ -194,3 +189,29 @@ def entry_details(request, entry_id):
         context = {"entry_details": entry, "form": form}
 
     return render(request, "entries/entry_details.html", context)
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return datetime.fromtimestamp(o.timestamp()).isoformat(" ", "seconds")
+
+        return json.JSONEncoder.default(self, o)
+
+
+def entries_to_json(entries_list: list):
+    i = 0
+    for item in entries_list:
+        item_id = item["id"]
+        for key, value in item.items():
+            if key in ("start", "end") and value is not None:
+                value = datetime.fromtimestamp(value.timestamp()).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+                entries_list[i][key] = value
+        entries_list[i] = {
+            key: f'<a href="/entries/entries/{item_id}">{value}</a>'
+            for key, value in item.items()
+        }
+        i += 1
+    return json.dumps(entries_list, cls=DateTimeEncoder)

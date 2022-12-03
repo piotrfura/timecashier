@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
+{% endblock %}
+{% block additional_scripts %}
+    <script>
+        function linkNumSorter(a, b) {
+            aa = parseInt($(a)[0].innerText);
+            bb = parseInt($(b)[0].innerText);
+            if (aa > bb) return 1;
+            if (aa < bb) return -1;
+            return 0;
+        }
+          function linkSorter(a, b) {
+            aa = $(a)[0].innerText;
+            bb = $(b)[0].innerText;
+            if (aa > bb) return 1;
+            if (aa < bb) return -1;
+            return 0;
+        }
+
+        function fileSizeSorter(a, b) {
+
+            var a_number = retnum(a);
+            var b_number = retnum(b);
+
+            a = a_number;
+            b = b_number;
+            if (a > b) return 1;
+            if (a < b) return -1;
+            return 0;
+        }
+
+        //return bytes of filesize
+        function retnum(number) {
+            var num = number.replace(/[^0-9.]/g, '');
+            var filesizename = number.replace(/[^a-zA-Z]+/g, '').toUpperCase();
+
+            num = parseFloat(num, 10);
+
+            switch (filesizename) {
+                case "KB":
+                    num = num * 1024;
+                    break;
+                case "MB":
+                    num = num * Math.pow(1024, 2);
+                    break;
+                case "GB":
+                    num = num * Math.pow(1024, 3);
+                    break;
+                case "TB":
+                    num = num * Math.pow(1024, 4);
+                    break;
+            }
+
+    return num;
+}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.0/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="{% static 'main/js/bootstrap-table-pl-PL.js' %}" ></script>
+{% endblock %}

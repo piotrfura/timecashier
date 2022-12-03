@@ -20,15 +20,16 @@ from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
 
-urlpatterns = [
-    path(settings.ADMIN_URL, admin.site.urls),
-    path('', include('main.urls')),
-    path('entries/', include('entries.urls')),
-    path('', include('register.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-
-
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = (
+    [
+        path(settings.ADMIN_URL, admin.site.urls),
+        path("", include("main.urls")),
+        path("entries/", include("entries.urls")),
+        path("", include("register.urls")),
+    ]
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
@@ -54,6 +55,4 @@ if settings.DEBUG:
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [
-            path("__debug__/", include(debug_toolbar.urls))
-        ] + urlpatterns
+        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
