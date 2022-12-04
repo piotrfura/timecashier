@@ -49,15 +49,15 @@ class NewEntryForm(forms.ModelForm):
 
         self.helper.layout = Layout(
             Div(
+                Column(FloatingField("client", css_class="col-md")),
+                Column(FloatingField("start", css_class="col-md")),
+                Column(FloatingField("end", css_class="col-md")),
                 Submit(
                     "submit",
                     "DODAJ",
                     css_class="btn-time-primary rounded-pill w-100",
-                    style="margin-bottom:20px",
+                    style="margin-bottom:10px",
                 ),
-                Column(FloatingField("client", css_class="col-md")),
-                Column(FloatingField("start", css_class="col-md")),
-                Column(FloatingField("end", css_class="col-md")),
                 css_class="row container col justify-content-center panel-background shadow-sm my-4",
             )
         )

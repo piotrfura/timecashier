@@ -2,11 +2,14 @@
 
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Zadania -{% endblock %}
 
 {% block content %}
 
 <h1>Zadania</h1>
+{% crispy search_entries_form %}
 
 <div class="row container col justify-content-center panel-background shadow">
     {% if entries_json %}

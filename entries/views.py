@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
+from entries.forms import SearchEntriesForm
 from entries.models import Client
 from entries.models import Entry
 from main.forms import EditClientForm
@@ -23,16 +25,90 @@ def clients_list(request):
 
 @login_required
 def entries_list(request):
-    entries = (
-        Entry.objects.all()
-        .filter(user=request.user, inactive=False, end__isnull=False)
-        .order_by("-end")
-    )
+    initial_dict = {
+        "from_time": (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M"),
+        "to_time": datetime.now().strftime("%Y-%m-%dT%H:%M"),
+    }
+    if request.method == "POST":
+        search_session_form = SearchEntriesForm(request.POST)
+        if search_session_form.is_valid():
+            from_time = search_session_form.cleaned_data["from_time"]
+            to_time = search_session_form.cleaned_data["to_time"]
+            if from_time and to_time:
+                entries = (
+                    Entry.objects.all()
+                    .filter(
+                        start__range=(from_time, to_time),
+                        user=request.user,
+                        inactive=False,
+                        end__isnull=False,
+                    )
+                    .order_by("-end")
+                    .all()
+                )
+                initial_dict = {
+                    "from_time": from_time.strftime("%Y-%m-%dT%H:%M"),
+                    "to_time": to_time.strftime("%Y-%m-%dT%H:%M"),
+                }
+            elif from_time and not to_time:
+                entries = (
+                    Entry.objects.all()
+                    .filter(
+                        start__gte=from_time,
+                        user=request.user,
+                        inactive=False,
+                        end__isnull=False,
+                    )
+                    .order_by("-end")
+                    .all()
+                )
+                initial_dict = {
+                    "from_time": from_time.strftime("%Y-%m-%dT%H:%M"),
+                }
+            elif not from_time and to_time:
+                entries = (
+                    Entry.objects.all()
+                    .filter(
+                        start__lte=to_time,
+                        user=request.user,
+                        inactive=False,
+                        end__isnull=False,
+                    )
+                    .order_by("-end")
+                    .all()
+                )
+                initial_dict = {
+                    "to_time": to_time.strftime("%Y-%m-%dT%H:%M"),
+                }
+            else:
+                entries = (
+                    Entry.objects.all()
+                    .filter(user=request.user, inactive=False, end__isnull=False)
+                    .order_by("-end")
+                )
+                initial_dict = {}
+        else:
+            messages.error(
+                request, "Wprowadzono błędne dane! Popraw i spróbuj ponownie."
+            )
+    else:
+        entries = (
+            Entry.objects.all()
+            .filter(user=request.user, inactive=False, end__isnull=False)
+            .order_by("-end")
+        )
+
     fields = ["id", "client__name", "start", "end", "duration"]
     entries = entries.values(*fields)
     entries_json = entries_to_json(list(entries))
 
-    context = {"entries_list": entries, "entries_json": entries_json}
+    search_entries_form = SearchEntriesForm(initial=initial_dict)
+
+    context = {
+        "search_entries_form": search_entries_form,
+        "entries_list": entries,
+        "entries_json": entries_json,
+    }
     return render(request, "entries/entries.html", context)
 
 
