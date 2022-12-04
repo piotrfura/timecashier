@@ -25,9 +25,12 @@ def clients_list(request):
 
 @login_required
 def entries_list(request):
+    init_from_time = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M")
+    init_to_time = datetime.now().strftime("%Y-%m-%dT%H:%M")
+
     initial_dict = {
-        "from_time": (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M"),
-        "to_time": datetime.now().strftime("%Y-%m-%dT%H:%M"),
+        "from_time": init_from_time,
+        "to_time": init_to_time,
     }
     if request.method == "POST":
         search_session_form = SearchEntriesForm(request.POST)
@@ -94,7 +97,12 @@ def entries_list(request):
     else:
         entries = (
             Entry.objects.all()
-            .filter(user=request.user, inactive=False, end__isnull=False)
+            .filter(
+                start__range=(init_from_time, init_to_time),
+                user=request.user,
+                inactive=False,
+                end__isnull=False,
+            )
             .order_by("-end")
         )
 
