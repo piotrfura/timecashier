@@ -27,6 +27,7 @@ class NewEntryForm(forms.ModelForm):
         fields = ["start", "end", "client"]
 
     def __init__(self, *args, **kwargs):
+        self.organization = kwargs.pop("organization")
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -41,7 +42,9 @@ class NewEntryForm(forms.ModelForm):
         )
         self.fields["client"].label = "Klient"
         self.fields["client"].widget = forms.Select(
-            choices=Client.objects.filter(inactive=False).values_list("id", "name")
+            choices=Client.objects.filter(
+                inactive=False, organization=self.organization
+            ).values_list("id", "name")
         )
 
         self.helper.layout = Layout(
@@ -66,6 +69,7 @@ class EditEntryForm(forms.ModelForm):
         fields = ["start", "end", "client", "description", "inactive"]
 
     def __init__(self, *args, **kwargs):
+        self.organization = kwargs.pop("organization")
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -80,7 +84,9 @@ class EditEntryForm(forms.ModelForm):
         )
         self.fields["client"].label = "Klient"
         self.fields["client"].widget = forms.Select(
-            choices=Client.objects.filter(inactive=False).values_list("id", "name")
+            choices=Client.objects.filter(
+                inactive=False, organization=self.organization
+            ).values_list("id", "name")
         )
         self.fields["description"].label = "Opis"
         self.fields["description"].widget = forms.Textarea(attrs={"rows": 5})
@@ -149,26 +155,41 @@ class EditClientForm(forms.ModelForm):
 
 class SearchEntriesForm(forms.Form):
 
+    client = forms.ModelChoiceField(
+        queryset=Client.objects.filter(inactive=False).values_list("id", "name")
+    )
     from_time = forms.DateTimeField()
     to_time = forms.DateTimeField()
 
     def __init__(self, *args, **kwargs):
+        self.organization = kwargs.pop("organization")
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.fields["from_time"].label = "Od"
         self.fields["to_time"].label = "Do"
+        self.fields["client"].label = "Klient"
         self.fields["from_time"].required = False
         self.fields["to_time"].required = False
+        self.fields["client"].required = False
         self.fields["from_time"].widget = forms.DateInput(
             attrs={"type": "datetime-local"}
         )
         self.fields["to_time"].widget = forms.DateInput(
             attrs={"type": "datetime-local"}
         )
+        self.fields["client"].widget = forms.Select(
+            choices=(("", ""),)
+            + tuple(
+                Client.objects.filter(
+                    inactive=False, organization=self.organization
+                ).values_list("id", "name")
+            )
+        )
         self.helper.form_method = "post"
         self.helper.form_action = ""
         self.helper.layout = Layout(
             Div(
+                Column(FloatingField("client")),
                 Column(FloatingField("from_time")),
                 Column(FloatingField("to_time")),
                 Submit(

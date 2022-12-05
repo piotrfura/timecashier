@@ -17,10 +17,17 @@ from entries.forms import SearchEntriesForm
 from entries.models import Client
 from entries.models import Entry
 from entries.models import Location
+from main.models import OrganizationUser
+
+
+def get_user_org(request):
+    user = OrganizationUser.objects.get(user=request.user)
+    return user.organization
 
 
 @login_required
 def home(request):
+    organization = get_user_org(request)
     entries = (
         Entry.objects.filter(user=request.user, inactive=False, end__isnull=False)
         .order_by("-end")
@@ -44,8 +51,7 @@ def home(request):
         )
 
     if request.method == "POST" and request.user.is_authenticated:
-
-        form = NewEntryForm(request.POST)
+        form = NewEntryForm(request.POST, organization=organization)
         if form.is_valid() and len(active_entry) == 0:
             form.cleaned_data["user"] = request.user
             start_time = form.cleaned_data["start"]
@@ -68,7 +74,7 @@ def home(request):
             )
 
     else:
-        form = NewEntryForm(initial=initial_dict)
+        form = NewEntryForm(initial=initial_dict, organization=organization)
 
     fields = ["id", "client__name", "start", "end", "duration"]
     entries = entries.values(*fields)
@@ -85,7 +91,7 @@ def home(request):
 
 @login_required
 def client_nearby(request):
-    clients = Client.objects.filter(inactive=False)
+    clients = Client.objects.filter(inactive=False, organization=get_user_org(request))
     clients_dist = {}
 
     longitude = request.GET.get("longitude")
@@ -110,7 +116,9 @@ def client_nearby(request):
 
 @login_required
 def clients_list(request):
-    clients = Client.objects.filter(inactive=False, user=request.user).all()
+    clients = Client.objects.filter(
+        inactive=False, organization=get_user_org(request)
+    ).all()
     fields = ["id", "name", "latitude", "longitude"]
     clients = clients.values(*fields)
     clients_json = clients_to_json(list(clients))
@@ -121,6 +129,7 @@ def clients_list(request):
 
 @login_required
 def entries_list(request):
+    organization = get_user_org(request)
     init_from_time = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M")
     init_to_time = datetime.now().strftime("%Y-%m-%dT%H:%M")
 
@@ -129,63 +138,42 @@ def entries_list(request):
         "to_time": init_to_time,
     }
     if request.method == "POST":
-        search_session_form = SearchEntriesForm(request.POST)
+        search_session_form = SearchEntriesForm(request.POST, organization=organization)
         if search_session_form.is_valid():
+            client = search_session_form.cleaned_data["client"]
             from_time = search_session_form.cleaned_data["from_time"]
             to_time = search_session_form.cleaned_data["to_time"]
-            if from_time and to_time:
-                entries = (
-                    Entry.objects.all()
-                    .filter(
-                        start__range=(from_time, to_time),
-                        user=request.user,
-                        inactive=False,
-                        end__isnull=False,
-                    )
-                    .order_by("-end")
-                    .all()
-                )
-                initial_dict = {
-                    "from_time": from_time.strftime("%Y-%m-%dT%H:%M"),
-                    "to_time": to_time.strftime("%Y-%m-%dT%H:%M"),
-                }
-            elif from_time and not to_time:
-                entries = (
-                    Entry.objects.all()
-                    .filter(
-                        start__gte=from_time,
-                        user=request.user,
-                        inactive=False,
-                        end__isnull=False,
-                    )
-                    .order_by("-end")
-                    .all()
-                )
-                initial_dict = {
-                    "from_time": from_time.strftime("%Y-%m-%dT%H:%M"),
-                }
-            elif not from_time and to_time:
-                entries = (
-                    Entry.objects.all()
-                    .filter(
-                        start__lte=to_time,
-                        user=request.user,
-                        inactive=False,
-                        end__isnull=False,
-                    )
-                    .order_by("-end")
-                    .all()
-                )
-                initial_dict = {
-                    "to_time": to_time.strftime("%Y-%m-%dT%H:%M"),
-                }
-            else:
-                entries = (
-                    Entry.objects.all()
-                    .filter(user=request.user, inactive=False, end__isnull=False)
-                    .order_by("-end")
-                )
-                initial_dict = {}
+
+            entry_filters = {
+                "user": request.user,
+                "inactive": False,
+                "end__isnull": False,
+            }
+            from django.db.models import Q
+
+            if client:
+                entry_filters["client"] = client
+                # q_client =  Q(client=client)  # any query you want
+
+            if from_time:
+                entry_filters["start__gte"] = from_time
+                from_time = from_time.strftime("%Y-%m-%dT%H:%M")
+            if to_time:
+                entry_filters["start__lte"] = to_time
+                to_time = to_time.strftime("%Y-%m-%dT%H:%M")
+
+            entries = (
+                Entry.objects.all()
+                .filter(*[Q(**{k: v}) for k, v in entry_filters.items() if v])
+                .order_by("-end")
+                .all()
+            )
+            print(entries.query)
+            initial_dict = {
+                "client": client,
+                "from_time": from_time,
+                "to_time": to_time,
+            }
         else:
             messages.error(
                 request, "Wprowadzono błędne dane! Popraw i spróbuj ponownie."
@@ -206,7 +194,9 @@ def entries_list(request):
     entries = entries.values(*fields)
     entries_json = entries_to_json(list(entries))
 
-    search_entries_form = SearchEntriesForm(initial=initial_dict)
+    search_entries_form = SearchEntriesForm(
+        initial=initial_dict, organization=organization
+    )
 
     context = {
         "search_entries_form": search_entries_form,
@@ -242,7 +232,9 @@ def client_add(request):
     if request.method == "POST" and request.user.is_authenticated:
         form = EditClientForm(request.POST)
         if form.is_valid():
-            Client.objects.create(**form.cleaned_data)
+            Client.objects.create(
+                organization=get_user_org(request), **form.cleaned_data
+            )
             messages.success(request, "Pomyślnie dodano klienta!")
             return HttpResponseRedirect(reverse("entries:clients"))
         messages.error(request, "Nie można zapisać zmian!")
@@ -253,6 +245,7 @@ def client_add(request):
 
 @login_required
 def entry_save(request, entry_id):
+    organization = get_user_org(request)
     entry = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {
         "start": entry.start.strftime("%Y-%m-%dT%H:%M"),
@@ -263,7 +256,12 @@ def entry_save(request, entry_id):
         active_entries = Entry.objects.filter(
             user=request.user, inactive=False, end__isnull=True
         )
-        form = EditEntryForm(request.POST, instance=entry, initial=initial_dict)
+        form = EditEntryForm(
+            request.POST,
+            instance=entry,
+            initial=initial_dict,
+            organization=organization,
+        )
         if form.is_valid():
             start_time = form.cleaned_data["start"]
             end_time = form.cleaned_data["end"]
@@ -298,7 +296,9 @@ def entry_save(request, entry_id):
                 reverse("entries:entry_save", kwargs={"entry_id": entry_id})
             )
     else:
-        form = EditEntryForm(instance=entry, initial=initial_dict)
+        form = EditEntryForm(
+            instance=entry, initial=initial_dict, organization=organization
+        )
 
         context = {"entry_details": entry, "form": form}
         return render(request, "entries/entry_details.html", context)
@@ -306,6 +306,7 @@ def entry_save(request, entry_id):
 
 @login_required
 def entry_details(request, entry_id):
+    organization = get_user_org(request)
     entry = get_object_or_404(Entry, pk=entry_id)
     initial_dict = {
         "start": entry.start.strftime("%Y-%m-%dT%H:%M"),
@@ -316,7 +317,12 @@ def entry_details(request, entry_id):
         active_entries = Entry.objects.filter(
             user=request.user, inactive=False, end__isnull=True
         )
-        form = EditEntryForm(request.POST, instance=entry, initial=initial_dict)
+        form = EditEntryForm(
+            request.POST,
+            instance=entry,
+            initial=initial_dict,
+            organization=organization,
+        )
         if form.is_valid():
             start_time = form.cleaned_data["start"]
             end_time = form.cleaned_data["end"]
@@ -357,7 +363,9 @@ def entry_details(request, entry_id):
                 reverse("entries:entry_details", kwargs={"entry_id": entry_id})
             )
     else:
-        form = EditEntryForm(instance=entry, initial=initial_dict)
+        form = EditEntryForm(
+            instance=entry, initial=initial_dict, organization=organization
+        )
         context = {"entry_details": entry, "form": form}
 
     return render(request, "entries/entry_details.html", context)
