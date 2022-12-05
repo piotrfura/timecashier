@@ -1,11 +1,12 @@
 from datetime import date
 from datetime import datetime
-from datetime import time
 from datetime import timedelta
 
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+
+from main.models import Organization
 
 
 # Create your models here.
@@ -40,6 +41,7 @@ class Client(Timestamped):
     inactive = models.BooleanField(default=False)
     slug = models.SlugField(max_length=100, unique=True)
     logo = models.ImageField(upload_to="entries/logos/", blank=True, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.name}"  # {self.longitude} {self.latitude} {self.created} {self.modified}'
