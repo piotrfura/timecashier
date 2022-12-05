@@ -1,0 +1,68 @@
+{% extends "base_bs_tables.html" %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block title %}Home -{% endblock %}
+
+{% block content %}
+
+{% if active_entry %}
+{% with active_entry|first as active_entry %}
+<h4>Aktywne zadanie</h4>
+<div class="row container col justify-content-center panel-background shadow-sm p-3" style="margin-top: 10px; margin-bottom: 20px; padding: 10px;">
+    <a href="{% url 'entries:entry_save' active_entry.id %}">
+        <button class="btn btn-time-danger rounded-pill w-100 mt-2 mb-3">ZATRZYMAJ</button>
+    </a>
+    <br>
+    <table id="table_active_entries" class="table table-light table-striped" style="width:100%">
+        <thead>
+            <th>Start</th>
+            <th>Klient</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="start">{{ active_entry.start }}</td>
+                <td>{{ active_entry.client.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endwith %}
+{% else %}
+    <h4>Nowe zadanie</h4>
+    <a id="mapslink" target="_blank" style="font-size: 0.75rem"></a>
+    {% crispy form %}
+{% endif %}
+<h4>Ostatnie zadania</h4>
+
+<div class="row container col justify-content-center panel-background shadow">
+    {% if entries_json %}
+    <table
+      id="bs-table-home-entries"
+      data-toggle="table"
+      data-locale="pl-PL"
+
+      data-data="{{ entries_json }}"
+      class="table table-light table-striped table-hover">
+      <thead>
+        <tr>
+            <th data-field=id data-sortable="true" data-sorter="linkNumSorter" class="d-none d-md-table-cell">Id</th>
+            <th data-field="start" data-sortable="true" data-sorter="linkSorter">Start</th>
+            <th data-field="end" data-sortable="true" data-sorter="linkSorter" class="d-none d-md-table-cell">Koniec</th>
+            <th data-field="client__name" data-sortable="true" data-sorter="linkSorter">Klient</th>
+            <th data-field="duration" data-sortable="true" data-sorter="linkSorter" >Czas</th>
+        </tr>
+      </thead>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block additional_scripts %}
+    {% if not active_entry %}
+        {% csrf_token %}
+        <script>getLocation()</script>
+    {% endif %}
+{% endblock %}

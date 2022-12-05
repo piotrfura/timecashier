@@ -5,21 +5,117 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
+from entries.forms import EditClientForm
+from entries.forms import EditEntryForm
+from entries.forms import NewEntryForm
 from entries.forms import SearchEntriesForm
 from entries.models import Client
 from entries.models import Entry
-from main.forms import EditClientForm
-from main.forms import EditEntryForm
+from entries.models import Location
+
+
+@login_required
+def home(request):
+    entries = (
+        Entry.objects.filter(user=request.user, inactive=False, end__isnull=False)
+        .order_by("-end")
+        .all()[0:5]
+    )
+    active_entry = Entry.objects.filter(
+        user=request.user, inactive=False, end__isnull=True
+    ).order_by("-start")[:1]
+    initial_dict = {
+        "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
+    }
+    if (
+        request.method == "POST"
+        and request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
+        and request.user.is_authenticated
+    ):
+        longitude = request.POST.get("longitude")
+        latitude = request.POST.get("latitude")
+        Location.objects.create(
+            longitude=longitude, latitude=latitude, user=request.user
+        )
+
+    if request.method == "POST" and request.user.is_authenticated:
+
+        form = NewEntryForm(request.POST)
+        if form.is_valid() and len(active_entry) == 0:
+            form.cleaned_data["user"] = request.user
+            start_time = form.cleaned_data["start"]
+            end_time = form.cleaned_data["end"]
+            if end_time is None:
+                Entry.objects.create(**form.cleaned_data)
+                messages.success(request, "Pomyślnie rozpoczęto nowe zadanie!")
+            if end_time is not None and end_time >= start_time:
+                form.cleaned_data["duration"] = end_time - start_time
+                Entry.objects.create(**form.cleaned_data)
+                messages.success(request, "Pomyślnie dodano zadanie!")
+            if end_time is not None and end_time < start_time:
+                messages.error(
+                    request, "Data zakończenia musi być późniejsza od daty startu!"
+                )
+            return HttpResponseRedirect(reverse("entries:home"))
+        if len(active_entry) != 0:
+            messages.error(
+                request, "Przed dodaniem kolejnego zadania musisz zakończyć poprzednie!"
+            )
+
+    else:
+        form = NewEntryForm(initial=initial_dict)
+
+    fields = ["id", "client__name", "start", "end", "duration"]
+    entries = entries.values(*fields)
+    entries_json = entries_to_json(list(entries))
+
+    context = {
+        "form": form,
+        "active_entry": active_entry,
+        "entries_json": entries_json,
+    }
+
+    return render(request, "entries/home.html", context)
+
+
+@login_required
+def client_nearby(request):
+    clients = Client.objects.filter(inactive=False)
+    clients_dist = {}
+
+    longitude = request.GET.get("longitude")
+    latitude = request.GET.get("latitude")
+
+    for client in clients:
+        length = abs(
+            (
+                (float(client.longitude) - float(longitude)) ** 2
+                + (float(client.latitude) - float(latitude)) ** 2
+            )
+            ** (0.5)
+        )
+        clients_dist[client] = length
+    min_dist = min(clients_dist.values())
+    nearest_client = [
+        client for client in clients_dist if clients_dist[client] == min_dist
+    ][0]
+    data = {"nearest_client": nearest_client.id}
+    return JsonResponse(data)
 
 
 @login_required
 def clients_list(request):
-    clients = Client.objects.filter(inactive=False)
-    context = {"clients_list": clients}
+    clients = Client.objects.filter(inactive=False, user=request.user).all()
+    fields = ["id", "name", "latitude", "longitude"]
+    clients = clients.values(*fields)
+    clients_json = clients_to_json(list(clients))
+
+    context = {"clients_json": clients_json}
     return render(request, "entries/clients.html", context)
 
 
@@ -121,17 +217,6 @@ def entries_list(request):
 
 
 @login_required
-def client_details(request, client_slug):
-    client = Client.objects.filter(inactive=False).get(slug=client_slug)
-
-    client_link = (
-        f"https://maps.google.com/maps?q= {client.latitude},{client.longitude}"
-    )
-    context = {"client": client, "client_link": client_link}
-    return render(request, "entries/client_details.html", context)
-
-
-@login_required
 def client_edit(request, client_id):
     client = get_object_or_404(Client, pk=client_id)
     if request.method == "POST" and request.user.is_authenticated:
@@ -144,9 +229,12 @@ def client_edit(request, client_id):
         messages.error(request, "Nie można zapisać zmian!")
     else:
         form = EditClientForm(instance=client)
-    return render(
-        request, "entries/client_edit.html", {"form": form, "client_details": client}
+
+    client_link = (
+        f"https://maps.google.com/maps?q= {client.latitude},{client.longitude}"
     )
+    context = {"form": form, "client_details": client, "client_link": client_link}
+    return render(request, "entries/client_edit.html", context)
 
 
 @login_required
@@ -185,13 +273,13 @@ def entry_save(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie zapisano zmiany!")
-                return HttpResponseRedirect(reverse("main:home"))
+                return HttpResponseRedirect(reverse("entries:home"))
             if end_time is not None and end_time >= start_time:
                 entry = form.save(commit=False)
                 entry.duration = end_time - start_time
                 entry.save()
                 messages.success(request, "Pomyślnie zakończono zadanie!")
-                return HttpResponseRedirect(reverse("main:home"))
+                return HttpResponseRedirect(reverse("entries:home"))
             if end_time is not None and end_time < start_time:
                 messages.error(
                     request, "Data zakończenia musi być późniejsza od daty startu!"
@@ -238,7 +326,7 @@ def entry_details(request, entry_id):
                 entry.duration = None
                 entry.save()
                 messages.success(request, "Pomyślnie przywrócono zadanie!")
-                return HttpResponseRedirect(reverse("main:home"))
+                return HttpResponseRedirect(reverse("entries:home"))
 
             if len(active_entries) != 0 and end_time is None:
                 messages.error(
@@ -294,8 +382,20 @@ def entries_to_json(entries_list: list):
                 )
                 entries_list[i][key] = value
         entries_list[i] = {
-            key: f'<a href="/entries/entries/{item_id}">{value}</a>'
+            key: f'<a href="/entries/{item_id}">{value}</a>'
             for key, value in item.items()
         }
         i += 1
     return json.dumps(entries_list, cls=DateTimeEncoder)
+
+
+def clients_to_json(data_list: list):
+    i = 0
+    for item in data_list:
+        item_id = item["id"]
+        data_list[i] = {
+            key: f'<a href="/clients/edit/{item_id}">{value}</a>'
+            for key, value in item.items()
+        }
+        i += 1
+    return json.dumps(data_list, cls=DateTimeEncoder)

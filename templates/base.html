@@ -25,7 +25,7 @@
             <div class="container-fluid">
             <a class="navbar-brand"
                 {% if user.is_authenticated %}
-                    href="{% url 'main:home' %}">
+                    href="{% url 'entries:home' %}">
                 {% else %}
                     href="{% url 'main:index' %}">
                 {% endif%}
@@ -76,6 +76,8 @@
             $('.alert').alert('close');
         }, 4000);
     </script>
+    {% block bs_tables_scripts %}
+    {% endblock %}
     {% block additional_scripts %}
     {% endblock %}
 </html>

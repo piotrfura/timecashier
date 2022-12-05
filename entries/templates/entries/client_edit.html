@@ -23,7 +23,16 @@
 
 {% crispy form  %}
 
+{% if client_details %}
+<br>
+<div class="row container col justify-content-center panel-background shadow-sm p-3 my-3">
+    <a href= '{{ client_link }}' target="_blank"><p>Kliknij aby zobaczyć w Mapach Google</p></a>
+    <br>
+    <iframe width="600" height="500" src="{{ client_link }}&z=15&&output=embed"></iframe>
+</div>
+{% endif %}
 {% endblock %}
+
 {% block additional_scripts %}
 <script>getLocation()</script>
 {% endblock %}
