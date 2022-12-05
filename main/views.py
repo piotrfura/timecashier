@@ -25,7 +25,7 @@ def access(request):
             return HttpResponseRedirect(reverse("entries:home"))
         if user is None:
             messages.error(request, "Nieprawidłowy użytkownik lub hasło!")
-            return HttpResponseRedirect(reverse("main:access"))
+            return HttpResponseRedirect(reverse("main:login"))
     else:
         form = LoginForm()
     return render(request, "main/login.html", {"form": form})
