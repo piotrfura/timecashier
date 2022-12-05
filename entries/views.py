@@ -4,6 +4,8 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.models import Session
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -28,6 +30,11 @@ def get_user_org(request):
 @login_required
 def home(request):
     organization = get_user_org(request)
+
+    session = Session.objects.get(session_key=request.session.session_key)
+    session_data = session.get_decoded()
+    nearest_client = session_data.get("nearest_client")
+
     entries = (
         Entry.objects.filter(user=request.user, inactive=False, end__isnull=False)
         .order_by("-end")
@@ -37,6 +44,7 @@ def home(request):
         user=request.user, inactive=False, end__isnull=True
     ).order_by("-start")[:1]
     initial_dict = {
+        "client": nearest_client,
         "start": datetime.now().strftime("%Y-%m-%dT%H:%M"),
     }
     if (
@@ -110,6 +118,9 @@ def client_nearby(request):
     nearest_client = [
         client for client in clients_dist if clients_dist[client] == min_dist
     ][0]
+
+    request.session["nearest_client"] = nearest_client.id
+
     data = {"nearest_client": nearest_client.id}
     return JsonResponse(data)
 
@@ -149,12 +160,9 @@ def entries_list(request):
                 "inactive": False,
                 "end__isnull": False,
             }
-            from django.db.models import Q
 
             if client:
                 entry_filters["client"] = client
-                # q_client =  Q(client=client)  # any query you want
-
             if from_time:
                 entry_filters["start__gte"] = from_time
                 from_time = from_time.strftime("%Y-%m-%dT%H:%M")
@@ -168,7 +176,6 @@ def entries_list(request):
                 .order_by("-end")
                 .all()
             )
-            print(entries.query)
             initial_dict = {
                 "client": client,
                 "from_time": from_time,
