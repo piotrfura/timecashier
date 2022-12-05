@@ -4,9 +4,18 @@ from datetime import timedelta
 
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.utils.text import slugify
 
 from main.models import Organization
+
+
+def unique_slugify(instance, slug):
+    model = instance.__class__
+    unique_slug = slug
+    while model.objects.filter(slug=unique_slug).exists():
+        unique_slug = slug + "-" + get_random_string(length=4)
+    return unique_slug
 
 
 # Create your models here.
@@ -48,7 +57,7 @@ class Client(Timestamped):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = unique_slugify(self, slugify(self.name))
         super(Client, self).save(*args, **kwargs)
 
 
