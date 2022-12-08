@@ -25,6 +25,7 @@ urlpatterns = (
         path(settings.ADMIN_URL, admin.site.urls),
         path("", include("main.urls")),
         path("", include("entries.urls")),
+        path("accounts/", include("allauth.urls")),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

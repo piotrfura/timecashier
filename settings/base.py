@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import os
 from pathlib import Path
 
 import environ
@@ -27,73 +28,81 @@ if Path(ENV_FILE).exists():
 DEBUG = env.bool("DJANGO_DEBUG", False)
 
 DJANGO_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 THIRD_PARTY_APPS = [
-    'import_export',
-    'crispy_forms',
-    'crispy_bootstrap5',
-    'axes',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    # 'allauth.socialaccount.providers.apple',
+    "allauth.socialaccount.providers.google",
+    "import_export",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "axes",
 ]
 LOCAL_APPS = [
-    'main.apps.MainConfig',
-    'entries.apps.EntriesConfig',
-    'tags.apps.TagsConfig',
+    "main.apps.MainConfig",
+    "entries.apps.EntriesConfig",
+    "tags.apps.TagsConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 AUTHENTICATION_BACKENDS = [
     # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
-    'axes.backends.AxesBackend',
-
+    "axes.backends.AxesBackend",
     # Django ModelBackend is the default authentication backend.
-    'django.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 AXES_FAILURE_LIMIT = 10
-AXES_LOCKOUT_CALLABLE = 'main.views.lockout'
+AXES_LOCKOUT_CALLABLE = "main.views.lockout"
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
     # It only formats user lockout messages and renders Axes lockout responses
     # on failed user authentication attempts from login views.
     # If you do not want Axes to override the authentication response
     # you can skip installing the middleware and use your own views.
-    'axes.middleware.AxesMiddleware',
+    "axes.middleware.AxesMiddleware",
 ]
 
-ROOT_URLCONF = 'timecashier.urls'
+ROOT_URLCONF = "timecashier.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR / "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'timecashier.wsgi.application'
+WSGI_APPLICATION = "timecashier.wsgi.application"
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -112,26 +121,28 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'pl-pl'
+LANGUAGE_CODE = "pl-pl"
 # LOCALE_NAME = 'pl_PL'
 
-TIME_ZONE = 'Europe/Warsaw'
+SITE_ID = 2
+
+TIME_ZONE = "Europe/Warsaw"
 
 # DATE_FORMAT = "%Y-%m-%d %H:%M"
 DATE_INPUT_FORMATS = "%Y-%m-%d %H:%M"
@@ -145,22 +156,20 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
-STATICFILES_DIR = [
-    BASE_DIR / 'static'
-]
+STATICFILES_DIR = [BASE_DIR / "static"]
 
-STATIC_ROOT = 'static/'
+STATIC_ROOT = "static/"
 
-MEDIA_URL = 'media/'
+MEDIA_URL = "media/"
 
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SHELL_PLUS_PRINT_SQL = True
 
@@ -171,14 +180,14 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MESSAGE_TAGS = {
-        messages.DEBUG: 'alert-secondary',
-        messages.INFO: 'alert-info',
-        messages.SUCCESS: 'alert-success',
-        messages.WARNING: 'alert-warning',
-        messages.ERROR: 'alert-danger',
- }
+    messages.DEBUG: "alert-secondary",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-danger",
+}
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/entry"
 LOGOUT_REDIRECT_URL = "/"
 
 # EMAIL
@@ -186,12 +195,13 @@ LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env(
     "DJANGO_EMAIL_BACKEND",
-    default="django.core.mail.backends.smtp.EmailBackend",
+    default="django.core.mail.backends.console.EmailBackend",
+    # default="django.core.mail.backends.smtp.EmailBackend",
 )
 # https://docs.djangoproject.com/en/2.2/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
-ADMIN_URL = 'admin/'
+ADMIN_URL = "admin/"
 
 
 # LOGGING
@@ -216,4 +226,36 @@ LOGGING = {
         }
     },
     "root": {"level": "INFO", "handlers": ["console"]},
+}
+
+# django-allauth
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_REQUIRED = True
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    # 'google': {
+    #     # For each OAuth based provider, either add a ``SocialApp``
+    #     # (``socialaccount`` app) containing the required client
+    #     # credentials, or list them here:
+    #     'APP': {
+    #         'client_id': '123',
+    #         'secret': '456',
+    #         'key': ''
+    #     }
+    # }
+}
+
+ACCOUNT_FORMS = {
+    "login": "main.forms.LoginForm",
+    # 'signup': 'allauth.account.forms.SignupForm',
+    # 'add_email': 'allauth.account.forms.AddEmailForm',
+    # 'change_password': 'allauth.account.forms.ChangePasswordForm',
+    # 'set_password': 'allauth.account.forms.SetPasswordForm',
+    # 'reset_password': 'allauth.account.forms.ResetPasswordForm',
+    # 'reset_password_from_key': 'allauth.account.forms.ResetPasswordKeyForm',
+    # 'disconnect': 'allauth.socialaccount.forms.DisconnectForm',
 }
