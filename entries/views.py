@@ -23,7 +23,7 @@ from main.models import OrganizationUser
 
 
 def get_user_org(request):
-    user = OrganizationUser.objects.get(user=request.user)
+    user = get_object_or_404(OrganizationUser, user=request.user)
     return user.organization
 
 
@@ -127,12 +127,16 @@ def client_nearby(request):
 
 @login_required
 def clients_list(request):
-    clients = Client.objects.filter(
-        inactive=False, organization=get_user_org(request)
-    ).all()
-    fields = ["id", "name", "latitude", "longitude"]
-    clients = clients.values(*fields)
-    clients_json = clients_to_json(list(clients))
+    organization = get_user_org(request)
+    if organization:
+        clients = Client.objects.filter(
+            inactive=False, organization=get_user_org(request)
+        ).all()
+        fields = ["id", "name", "latitude", "longitude"]
+        clients = clients.values(*fields)
+        clients_json = clients_to_json(list(clients))
+    else:
+        clients_json = {}
 
     context = {"clients_json": clients_json}
     return render(request, "entries/clients.html", context)
