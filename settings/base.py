@@ -41,10 +41,9 @@ THIRD_PARTY_APPS = [
     'axes',
 ]
 LOCAL_APPS = [
-    'entries.apps.EntriesConfig',
     'main.apps.MainConfig',
+    'entries.apps.EntriesConfig',
     'tags.apps.TagsConfig',
-    'register.apps.RegisterConfig'
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
