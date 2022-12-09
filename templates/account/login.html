@@ -9,29 +9,25 @@
 {% block page_content %}
 <h1 style="text-align: center;">Logowanie</h1>
 
-
 <div class="container col col-md-5 justify-content-center panel-background shadow-sm p-3">
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
   {% crispy form %}
   {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
   {% endif %}
   <a class="button secondaryAction" href="{% url 'account_reset_password' %}">Nie pamiętam hasła</a>
-</form>
 
-<div class="my-3 text-center"><span>lub</span></div>
+  <div class="my-3 text-center"><span>lub</span></div>
 
-<div class="p-0 m-0">
-  <form action="{% provider_login_url 'google' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-light rounded-pill w-100">
-      <img src="{% static 'main/images/google.svg' %}">
-      <span>Zaloguj się używając Google</span>
-    </button>
-  </form>
-</div>
+  <div class="p-0 m-0">
+    <form action="{% provider_login_url 'google' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-light rounded-pill w-100">
+        <img alt src="{% static 'main/images/google.svg' %}">
+        <span>Zaloguj się używając Google</span>
+      </button>
+    </form>
+  </div>
 </div>
 
 <div class="container col col-md-5 justify-content-center panel-background shadow-sm p-3 my-3 text-center">

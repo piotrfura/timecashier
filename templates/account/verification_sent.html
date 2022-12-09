@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+
+{% block page_content %}
+<h1 style="text-align: center;">{% trans "Verify Your E-mail Address" %}</h1>
+
+<div class="container col col-md-5 justify-content-center panel-background shadow-sm p-3">
+    <p style="color: black;">
+        Wysłaliśmy Ci wiadomość e-mail z linkiem do weryfikacji.
+        <br>
+        Kliknij go, aby dokończyć proces rejestracji.
+        <br>
+        Jeżeli nie otrzymałeś wiadomości, sprawdź proszę folder SPAM.
+        <br>
+        Skontaktuj się z nami, jeżeli nie otrzymasz jej w ciągu kilku minut.
+    </p>
+</div>
+{% endblock %}
