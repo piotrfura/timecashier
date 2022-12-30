@@ -34,9 +34,13 @@ body {
   border-bottom: 4px solid #52ab98;
   padding: 6px 0;
 }
+.nav-item.active {
+  border-bottom: 3px solid #52ab98;
+  padding: 0px 0;
+}
 .nav-item.logout a:hover {
   border-bottom: 4px solid #bc5456;
-  padding: 6px 5px;
+  padding: 6px 8px;
 }
 
 .page-content {
@@ -176,4 +180,15 @@ input + label {
   color: #fff;
   border: solid;
   border-color: #2b6777;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+        color: #fff;
+        background-color: #2b6777;
+    }
+.nav-pills .nav-link, .nav-pills .show>.nav-link {
+    color: black;
+}
+.nav-pills .nav-link:hover, .nav-pills .show>.nav-link {
+    background-color: #2b6777;
+    color: #fff;
 }
