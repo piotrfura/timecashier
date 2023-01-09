@@ -68,6 +68,12 @@ AUTHENTICATION_BACKENDS = [
 AXES_FAILURE_LIMIT = 10
 AXES_LOCKOUT_CALLABLE = "main.views.lockout"
 
+# solves production problem with ip address forwarding from http server
+AXES_META_PRECEDENCE_ORDER = [
+    "HTTP_X_FORWARDED_FOR",
+    "REMOTE_ADDR",
+]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
