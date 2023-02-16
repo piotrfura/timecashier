@@ -146,8 +146,10 @@ def clients_list(request):
 def entries_list(request):
     organization = get_user_org(request)
 
-    month_start_time = datetime.today().replace(day=1, hour=0, minute=0, microsecond=0)
-    init_to_time = month_start_time - timedelta(days=1)
+    month_start_time = datetime.today().replace(
+        day=1, hour=0, minute=0, second=0, microsecond=0
+    )
+    init_to_time = month_start_time - timedelta(microseconds=1)
     init_from_time = month_start_time - timedelta(days=init_to_time.day)
 
     initial_dict = {
