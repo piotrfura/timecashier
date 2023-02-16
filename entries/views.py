@@ -145,12 +145,14 @@ def clients_list(request):
 @login_required
 def entries_list(request):
     organization = get_user_org(request)
-    init_from_time = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M")
-    init_to_time = datetime.now().strftime("%Y-%m-%dT%H:%M")
+
+    month_start_time = datetime.today().replace(day=1, hour=0, minute=0, microsecond=0)
+    init_to_time = month_start_time - timedelta(days=1)
+    init_from_time = month_start_time - timedelta(days=init_to_time.day)
 
     initial_dict = {
-        "from_time": init_from_time,
-        "to_time": init_to_time,
+        "from_time": init_from_time.strftime("%Y-%m-%dT%H:%M"),
+        "to_time": init_to_time.strftime("%Y-%m-%dT%H:%M"),
     }
     if request.method == "POST":
         search_session_form = SearchEntriesForm(request.POST, organization=organization)
