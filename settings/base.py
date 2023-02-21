@@ -265,3 +265,5 @@ ACCOUNT_FORMS = {
     "reset_password_from_key": "main.forms.ResetPasswordKeyForm",
     # 'disconnect': 'allauth.socialaccount.forms.DisconnectForm',
 }
+
+ACCOUNT_SESSION_REMEMBER = True
