@@ -9,6 +9,8 @@ from main.forms import ChangePasswordForm
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("entries:home"))
     return render(request, "main/index.html")
 
 
