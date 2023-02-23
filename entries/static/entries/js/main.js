@@ -24,6 +24,12 @@ function getLocation(){
                     $('#id_longitude').val(longitude.toFixed(7));
                 };
             };
+            if($('#hid_latitude').length > 0 && $('#hid_longitude').length > 0){
+                if($('#hid_latitude').val() == ''){
+                    $('#hid_latitude').val(latitude.toFixed(7));
+                    $('#hid_longitude').val(longitude.toFixed(7));
+                };
+            };
 
         });
 
@@ -64,4 +70,11 @@ function getLocation(){
 
     });
    };
+};
+
+function setCurrentLocation(){
+    var hid_latitude = $('#hid_latitude').val()
+    var hid_longitude = $('#hid_longitude').val()
+    $('#id_latitude').val(hid_latitude);
+    $('#id_longitude').val(hid_longitude);
 };

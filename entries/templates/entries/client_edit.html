@@ -21,9 +21,13 @@
 <h1>Dodaj klienta</h1>
 {% endif %}
 
-{% crispy form  %}
+{% crispy form  %}{% if client_details %}
+<div class="container col col-md-6 justify-content-center panel-background">
+    <input type="hidden" id="hid_longitude" name="hid_longitude" value="" />
+    <input type="hidden" id="hid_latitude" name="hid_latitude" value="" />
+    <button type="button" class="btn btn-light rounded-pill w-100" onclick="setCurrentLocation()">Ustaw bieżącą lokalizację</button>
+</div>
 
-{% if client_details %}
 <br>
 <div class="row container col justify-content-center panel-background shadow-sm p-3 my-3">
     <a href= '{{ client_link }}' target="_blank"><p>Kliknij aby zobaczyć w Mapach Google</p></a>
