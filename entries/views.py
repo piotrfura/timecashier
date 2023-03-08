@@ -17,10 +17,11 @@ from entries.forms import EditEntryForm
 from entries.forms import NewEntryForm
 from entries.forms import SearchEntriesForm
 from entries.models import Client
-from entries.models import ClientRate
 from entries.models import Entry
 from entries.models import Location
 from main.models import OrganizationUser
+
+# from entries.models import ClientRate
 
 
 def get_user_org(request):
@@ -225,7 +226,7 @@ def entries_list(request):
 @login_required
 def client_edit(request, client_id):
     client = get_object_or_404(Client, pk=client_id)
-    client_rates = ClientRate.objects.filter(client_id=client.pk).all()
+    # client_rates = ClientRate.objects.filter(client_id=client.pk).all()
     if request.method == "POST" and request.user.is_authenticated:
         form = EditClientForm(request.POST, request.FILES, instance=client)
         if form.is_valid():
@@ -243,7 +244,7 @@ def client_edit(request, client_id):
     context = {
         "form": form,
         "client_details": client,
-        "client_rates": client_rates,
+        # "client_rates": client_rates,
         "client_lat": client.latitude,
         "client_long": client.longitude,
         "client_link": client_link,
