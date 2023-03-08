@@ -10,6 +10,7 @@
 
 {% csrf_token %}
 
+{% load l10n %}
 
 {% if client_details %}
 <h1>Edycja klienta</h1>
@@ -21,22 +22,46 @@
 <h1>Dodaj klienta</h1>
 {% endif %}
 
-{% crispy form  %}{% if client_details %}
-<div class="container col col-md-6 justify-content-center panel-background">
-    <input type="hidden" id="hid_longitude" name="hid_longitude" value="" />
-    <input type="hidden" id="hid_latitude" name="hid_latitude" value="" />
-    <button type="button" class="btn btn-light rounded-pill w-100" onclick="setCurrentLocation()">Ustaw bieżącą lokalizację</button>
-</div>
+{% crispy form  %}
 
-<br>
-<div class="row container col justify-content-center panel-background shadow-sm p-3 my-3">
-    <a href= '{{ client_link }}' target="_blank"><p>Kliknij aby zobaczyć w Mapach Google</p></a>
-    <br>
-    <iframe width="600" height="500" src="{{ client_link }}&z=15&&output=embed"></iframe>
+{% if client_details %}
+<div class="container col col-md-6 justify-content-center panel-background">
+    <button type="button" class="btn btn-light rounded-pill w-100" onclick="getLocation()">Ustaw bieżącą lokalizację</button>
 </div>
+<!--{% if client_rates %}-->
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>Rodzaj</th>-->
+<!--        <th>Stawka</th>-->
+<!--    </tr>-->
+<!--    {% for rate in client_rates %}-->
+<!--    <tr>-->
+<!--        <td>{{ rate.name }}</td>-->
+<!--        <td>{{ rate.rate }}</td>-->
+<!--    </tr>-->
+<!--    {% endfor %}-->
+<!--</table>-->
+<!--{% endif %}-->
 {% endif %}
+<br>
+<div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>
 {% endblock %}
 
 {% block additional_scripts %}
-<script>getLocation()</script>
+<script src="{% static 'entries/js/main.js' %}"></script>
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxd_FDKWmoBx_ywEXflRnkmjHArAwnZ6E">
+        defer
+</script>
+
+{% if client_lat and client_long %}
+<script>
+    initMap({{ client_lat|unlocalize }}, {{ client_long|unlocalize }});
+</script>
+{% else %}
+<script>
+    getLocation()
+</script>
+{% endif %}
+
 {% endblock %}
