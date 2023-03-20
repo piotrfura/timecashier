@@ -20,7 +20,7 @@ class LoginForm(LoginForm):
             Div(
                 FloatingField("login"),
                 FloatingField("password"),
-                Field("remember"),
+                # Field("remember"),
                 Submit(
                     "submit",
                     "Zaloguj",
