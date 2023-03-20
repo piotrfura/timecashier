@@ -56,5 +56,5 @@ class LocationAdmin(admin.ModelAdmin):
         "longitude",
         "user",
     )
-    list_filter = ("created", "modified")
+    list_filter = ("user", "created", "modified")
     raw_id_fields = ("user",)
