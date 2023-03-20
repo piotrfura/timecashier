@@ -31,8 +31,14 @@
 </div>
 {% endwith %}
 {% else %}
+
     <h4>Nowe zadanie</h4>
     <a id="mapslink" target="_blank" style="font-size: 0.75rem">Pobieram lokalizację...</a>
+    <div class="row container col justify-content-center mt-2" style="text-align: right; margin-bottom: 10px;">
+        <a href="{% url 'entries:client_add' %}">
+            <button class="btn btn-time-primary rounded-pill">Dodaj nowego klienta</button>
+        </a>
+    </div>
     {% crispy form %}
 {% endif %}
 <h4>Ostatnie zadania</h4>

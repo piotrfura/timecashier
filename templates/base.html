@@ -44,7 +44,8 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                        <li class="nav-item mx-auto {% if request.resolver_match.url_name == 'entries' %}active{% endif %}"> <a class="nav-link" href="{% url 'entries:entries' %}"><i class="bi-clock-history"></i> Zadania</a> </li>
+                        <li class="nav-item mx-auto {% if request.resolver_match.url_name == 'home' %}active{% endif %}"> <a class="nav-link" href="{% url 'entries:home' %}"><i class="bi-clock-history"></i> Nowe zadanie</a> </li>
+                        <li class="nav-item mx-auto {% if request.resolver_match.url_name == 'entries' %}active{% endif %}"> <a class="nav-link" href="{% url 'entries:entries' %}"><i class="bi-archive"></i> Archiwum</a> </li>
                         <li class="nav-item mx-auto {% if request.resolver_match.url_name == 'clients' %}active{% endif %}"> <a class="nav-link" href="{% url 'entries:clients' %}"><i class="bi-building"></i> Klienci</a> </li>
                         <li class="nav-item mx-auto {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"> <a class="nav-link" href="{% url 'account_change_password' %}"}><i class="bi-person-square"></i> Profil</a> </li>
                         <li style="border-bottom: 1px solid #2b6777"> <p></p> </li>
