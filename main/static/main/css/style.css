@@ -165,6 +165,20 @@ input + label {
   --bs-btn-active-bg: transparent;
   --bs-btn-active-border-color: white;
 }
+.btn-time-delete {
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: white;
+  --bs-btn-bg: #FF7D7A;
+  --bs-btn-border-color: #FF7D7A;
+  --bs-btn-border-radius: .5rem;
+  --bs-btn-hover-color: white;
+  --bs-btn-hover-bg: #FF7D7A;
+  --bs-btn-hover-border-color: white;
+  --bs-btn-focus-shadow-rgb: #585858;
+  --bs-btn-active-color: #585858;
+  --bs-btn-active-bg: transparent;
+  --bs-btn-active-border-color: white;
+}
 .pagination>li>a,
 .pagination>li>span {
     color: black;

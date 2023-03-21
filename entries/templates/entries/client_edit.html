@@ -26,6 +26,12 @@
 
 {% if client_details %}
 <div class="container col col-md-6 justify-content-center panel-background">
+    <form action="{% url 'entries:client_delete' client_id=client_details.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-time-delete rounded-pill w-100" value="USUŃ"/>
+    </form>
+</div>
+<div class="container col col-md-6 justify-content-center panel-background">
     <button type="button" class="btn btn-light rounded-pill w-100" onclick="getLocation()">Ustaw bieżącą lokalizację</button>
 </div>
 <!--{% if client_rates %}-->

@@ -269,6 +269,18 @@ def client_add(request):
 
 
 @login_required
+def client_delete(request, client_id):
+    if request.method == "POST" and request.user.is_authenticated:
+        client = get_object_or_404(Client, pk=client_id)
+        if client.organization == get_user_org(request):
+            client.inactive = True
+            client.save()
+            messages.success(request, "Pomyślnie usunięto klienta!")
+        else:
+            messages.error(request, "Nie można zapisać zmian!")
+    return HttpResponseRedirect(reverse("entries:clients"))
+
+@login_required
 def entry_save(request, entry_id):
     organization = get_user_org(request)
     entry = get_object_or_404(Entry, pk=entry_id)

@@ -131,22 +131,20 @@ class EditClientForm(forms.ModelForm):
         self.fields["longitude"].widget = forms.NumberInput(
             attrs={"step": 0.0000001, "max": 180.0000000, "min": -180.0000000}
         )
-        self.fields["inactive"].label = "Usuń"
-
         self.helper.layout = Layout(
             Div(
                 Div(
+
+                    FloatingField("name"),
+                    FloatingField("latitude"),
+                    FloatingField("longitude"),
+                    "logo",
                     Submit(
                         "submit",
                         "ZAPISZ",
                         css_class="btn-time-primary rounded-pill w-100",
                         style="margin-bottom:10px",
                     ),
-                    FloatingField("name"),
-                    FloatingField("latitude"),
-                    FloatingField("longitude"),
-                    "logo",
-                    "inactive",
                 ),
                 css_class="container col col-md-6 justify-content-center panel-background shadow",
             )
