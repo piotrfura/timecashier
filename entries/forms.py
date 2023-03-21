@@ -58,7 +58,7 @@ class NewEntryForm(forms.ModelForm):
                     css_class="btn-time-primary rounded-pill w-100",
                     style="margin-bottom:10px",
                 ),
-                css_class="row container col justify-content-center panel-background shadow-sm my-4",
+                css_class="row container col justify-content-center panel-background shadow-sm mb-4 mt-2",
             )
         )
 
