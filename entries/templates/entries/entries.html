@@ -9,6 +9,20 @@
 {% block page_content %}
 
 <h1>Archiwum</h1>
+<div class="container m-1">
+    <div class="row">
+        <div class="col-sm">
+            <a href="{% url 'entries:entries_filter' month=1 %}">
+                <input type="submit" class="btn btn-time-danger rounded-pill w-100 m-1" value="Poprzedni miesiąc"/>
+            </a>
+        </div>
+        <div class="col-sm">
+            <a href="{% url 'entries:entries_filter' month=0 %}">
+                <input type="submit" class="btn btn-time-danger rounded-pill w-100 m-1" value="Bieżący miesiąc (domyślnie)"/>
+            </a>
+        </div>
+    </div>
+</div>
 {% crispy search_entries_form %}
 
 <div class="row container col justify-content-center panel-background shadow">

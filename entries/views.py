@@ -147,11 +147,15 @@ def clients_list(request):
 
 
 @login_required
-def entries_list(request):
+def entries_list(request, month=0):
     organization = get_user_org(request)
-
     month_start_time = datetime.today().replace(
-        day=1, hour=0, minute=0, second=0, microsecond=0
+        month=datetime.today().month + 1 - month,
+        day=1,
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
     )
     init_to_time = month_start_time - timedelta(microseconds=1)
     init_from_time = month_start_time - timedelta(days=init_to_time.day)
@@ -169,7 +173,6 @@ def entries_list(request):
 
             entry_filters = {
                 "user": request.user,
-                "inactive": False,
                 "end__isnull": False,
             }
 
@@ -185,6 +188,7 @@ def entries_list(request):
             entries = (
                 Entry.objects.all()
                 .filter(*[Q(**{k: v}) for k, v in entry_filters.items() if v])
+                .filter(inactive=False)
                 .order_by("-end")
                 .all()
             )
@@ -208,7 +212,6 @@ def entries_list(request):
             )
             .order_by("-end")
         )
-
     fields = ["id", "client__name", "start", "end", "duration"]
     entries = entries.values(*fields)
     entries_list = list(entries)
@@ -218,7 +221,6 @@ def entries_list(request):
     search_entries_form = SearchEntriesForm(
         initial=initial_dict, organization=organization
     )
-
     context = {
         "search_entries_form": search_entries_form,
         "entries_list": entries,
@@ -423,7 +425,7 @@ def entry_delete(request, entry_id):
             messages.success(request, "Pomyślnie usunięto zadanie!")
         else:
             messages.error(request, "Nie można zapisać zmian!")
-    return HttpResponseRedirect(reverse("entries:home"))
+    return HttpResponseRedirect(reverse("entries:entries"))
 
 
 class DateTimeEncoder(json.JSONEncoder):

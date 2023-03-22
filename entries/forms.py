@@ -193,6 +193,6 @@ class SearchEntriesForm(forms.Form):
                     css_class="btn-time-primary rounded-pill w-100",
                     style="margin-top: 10px;",
                 ),
-                css_class="row container col justify-content-center panel-background shadow-sm my-4",
+                css_class="row container col justify-content-center panel-background shadow-sm mb-4 mt-1",
             )
         )
