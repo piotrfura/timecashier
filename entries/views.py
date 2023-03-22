@@ -88,7 +88,9 @@ def home(request):
 
     fields = ["id", "client__name", "start", "end", "duration"]
     entries = entries.values(*fields)
-    entries_json = entries_to_json(list(entries))
+    entries_list = list(entries)
+    entries_list.reverse()
+    entries_json = entries_to_json(entries_list)
 
     context = {
         "form": form,
@@ -209,7 +211,9 @@ def entries_list(request):
 
     fields = ["id", "client__name", "start", "end", "duration"]
     entries = entries.values(*fields)
-    entries_json = entries_to_json(list(entries))
+    entries_list = list(entries)
+    entries_list.reverse()
+    entries_json = entries_to_json(entries_list)
 
     search_entries_form = SearchEntriesForm(
         initial=initial_dict, organization=organization
@@ -279,6 +283,7 @@ def client_delete(request, client_id):
         else:
             messages.error(request, "Nie można zapisać zmian!")
     return HttpResponseRedirect(reverse("entries:clients"))
+
 
 @login_required
 def entry_save(request, entry_id):
@@ -426,11 +431,15 @@ def entries_to_json(entries_list: list):
                     "%Y-%m-%d %H:%M:%S"
                 )
                 entries_list[i][key] = value
+            elif key == "id" and value is not None:
+                value = i + 1
+                entries_list[i][key] = value
         entries_list[i] = {
             key: f'<a href="/entries/{item_id}">{value}</a>'
             for key, value in item.items()
         }
         i += 1
+    entries_list.reverse()
     return json.dumps(entries_list, cls=DateTimeEncoder)
 
 
