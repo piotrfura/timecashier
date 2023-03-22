@@ -413,6 +413,19 @@ def entry_details(request, entry_id):
     return render(request, "entries/entry_details.html", context)
 
 
+@login_required
+def entry_delete(request, entry_id):
+    if request.method == "POST" and request.user.is_authenticated:
+        entry = get_object_or_404(Entry, pk=entry_id)
+        if entry.client.organization == get_user_org(request):
+            entry.inactive = True
+            entry.save()
+            messages.success(request, "Pomyślnie usunięto zadanie!")
+        else:
+            messages.error(request, "Nie można zapisać zmian!")
+    return HttpResponseRedirect(reverse("entries:home"))
+
+
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, datetime):

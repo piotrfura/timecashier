@@ -15,4 +15,10 @@
 
 {% crispy form  %}
 
+<div class="container col col-md-6 justify-content-center panel-background">
+    <form action="{% url 'entries:entry_delete' entry_id=entry_details.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-time-delete rounded-pill w-100" value="USUŃ"/>
+    </form>
+</div>
 {% endblock %}

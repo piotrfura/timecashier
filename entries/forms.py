@@ -90,7 +90,6 @@ class EditEntryForm(forms.ModelForm):
         )
         self.fields["description"].label = "Opis"
         self.fields["description"].widget = forms.Textarea(attrs={"rows": 5})
-        self.fields["inactive"].label = "Usuń"
 
         self.helper.layout = Layout(
             Div(
@@ -105,7 +104,6 @@ class EditEntryForm(forms.ModelForm):
                     FloatingField("end"),
                     FloatingField("client"),
                     FloatingField("description", css_class="h-100"),
-                    "inactive",
                 ),
                 css_class="container col col-md-6 justify-content-center panel-background shadow",
             )
@@ -134,7 +132,6 @@ class EditClientForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Div(
-
                     FloatingField("name"),
                     FloatingField("latitude"),
                     FloatingField("longitude"),
