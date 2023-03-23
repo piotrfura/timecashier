@@ -102,14 +102,14 @@ async function geoCodeAddress(address){
     const data = await response.json();
 
     if (data.length > 0) {
-      let latitude = data[0].lat;
-      let longitude = data[0].lon;
-      latitude_num = parseFloat(latitude).toFixed(7);
-      longitude_num = parseFloat(longitude).toFixed(7);
-      console.log(typeof latitude_num)
+      let latitude = +(data[0].lat);
+      let longitude = +(data[0].lon);
+      latitude.toFixed(7);
+      longitude.toFixed(7);
 
       $('#id_latitude').val(latitude);
       $('#id_longitude').val(longitude);
+
       if (document.getElementById('map')) {
                 initMap(latitude, longitude)
         };
