@@ -52,8 +52,8 @@ function getLocation(){
             .then(res => res.json())
             .then(data => {
                 if($("#mapslink").length >0){
-                    $("#mapslink").text('Znajdujesz się w ' + data.countryName + ', ' + data.city + ', ' + data.locality + ' (' + latitude + ', '+ longitude + ') - klinij, aby sprawdzić w Mapach Google');
-                    $("#mapslink").attr("href", `https://maps.google.com/maps?q=${latitude},${longitude}`);
+                    $("#mapslink").text('Jesteś w: ' + data.countryName + ', ' + data.city + ', ' + data.locality + ' - zobacz na mapie');
+//                    $("#mapslink").attr("href", `https://maps.google.com/maps?q=${latitude},${longitude}`);
                 };
             });
         };

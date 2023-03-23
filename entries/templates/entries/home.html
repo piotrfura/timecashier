@@ -33,7 +33,12 @@
 {% else %}
 
     <h4>Nowe zadanie</h4>
-    <a id="mapslink" target="_blank" style="font-size: 0.75rem">Pobieram lokalizację...</a>
+<!--    <a id="mapslink" target="_blank" style="font-size: 0.75rem">Pobieram lokalizację...</a>-->
+    <div class="mb-2">
+        <button id="mapslink" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-current-location">
+          Pobieram lokalizację...
+        </button>
+    </div>
     <div class="row container col justify-content-center m-0" style="text-align: right; margin-bottom: 10px;">
         <a href="{% url 'entries:client_add' %}">
             <button class="btn btn-time-primary rounded-pill">Dodaj nowego klienta</button>
@@ -64,11 +69,28 @@
     </table>
     {% endif %}
 </div>
+<div class="modal fade" id="modal-current-location" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Obecnie znajdujesz się tutaj</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block additional_scripts %}
     {% if not active_entry %}
         <script src="{% static 'entries/js/main.js' %}"></script>
+        <script
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxd_FDKWmoBx_ywEXflRnkmjHArAwnZ6E">
+                defer
+        </script>
         {% csrf_token %}
         <script>getLocation()</script>
     {% endif %}
