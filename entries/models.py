@@ -65,6 +65,15 @@ class Client(Timestamped):
         super(Client, self).save(*args, **kwargs)
 
 
+class ClientRate(Timestamped):
+    name = models.CharField(max_length=50, default="general")
+    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.client} {self.name} {self.rate}"
+
+
 class Entry(Timestamped):
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(blank=True, null=True)
