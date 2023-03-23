@@ -53,7 +53,6 @@ function getLocation(){
             .then(data => {
                 if($("#mapslink").length >0){
                     $("#mapslink").text('Jesteś w: ' + data.countryName + ', ' + data.city + ', ' + data.locality + ' - zobacz na mapie');
-//                    $("#mapslink").attr("href", `https://maps.google.com/maps?q=${latitude},${longitude}`);
                 };
             });
         };
@@ -94,4 +93,32 @@ function getLocation(){
 
     });
    };
+};
+
+async function geoCodeAddress(address){
+    geoLocationiqURL = 'https://eu1.locationiq.com/v1/search.php?format=json&key=pk.93625210f7120f17465e71ab649858a3&countrycodes=pl&q=${address}';
+    try {
+    const response = await fetch(geoLocationiqURL);
+    const data = await response.json();
+
+    if (data.length > 0) {
+      let latitude = data[0].lat;
+      let longitude = data[0].lon;
+      latitude_num = parseFloat(latitude).toFixed(7);
+      longitude_num = parseFloat(longitude).toFixed(7);
+      console.log(typeof latitude_num)
+
+      $('#id_latitude').val(latitude);
+      $('#id_longitude').val(longitude);
+      if (document.getElementById('map')) {
+                initMap(latitude, longitude)
+        };
+//      return longitude;
+    } else {
+      throw new Error("No results found.");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
 };
