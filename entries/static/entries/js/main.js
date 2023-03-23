@@ -96,26 +96,31 @@ function getLocation(){
 };
 
 async function geoCodeAddress(address){
-    geoLocationiqURL = 'https://eu1.locationiq.com/v1/search.php?format=json&key=pk.93625210f7120f17465e71ab649858a3&countrycodes=pl&q=${address}';
+    let country = 'pl';
+    let postalcode = $('#id_zip_code').val();
+//    let street = $('#id_street').val() + ' ' + $('#id_number').val();
+//    let city = $('#id_city').val();
+    console.log(postalcode)
+    geoLocationiqURL = 'https://eu1.locationiq.com/v1/search.php?format=json&key=pk.93625210f7120f17465e71ab649858a3'
+                        + '&countrycodes=' + country + '&postalcode=' + postalcode;
     try {
-    const response = await fetch(geoLocationiqURL);
-    const data = await response.json();
+        const response = await fetch(geoLocationiqURL);
+        const data = await response.json();
 
-    if (data.length > 0) {
-      let latitude = +(data[0].lat);
-      let longitude = +(data[0].lon);
-      latitude.toFixed(7);
-      longitude.toFixed(7);
+        if (data.length > 0) {
+          let latitude = +(data[0].lat);
+          let longitude = +(data[0].lon);
+          latitude.toFixed(7);
+          longitude.toFixed(7);
 
-      $('#id_latitude').val(latitude);
-      $('#id_longitude').val(longitude);
+          $('#id_latitude').val(latitude);
+          $('#id_longitude').val(longitude);
 
-      if (document.getElementById('map')) {
-                initMap(latitude, longitude)
-        };
-//      return longitude;
-    } else {
-      throw new Error("No results found.");
+          if (document.getElementById('map')) {
+                    initMap(latitude, longitude)
+            };
+        } else {
+          throw new Error("No results found.");
     }
   } catch (error) {
     console.error(error);
