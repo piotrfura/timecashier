@@ -134,6 +134,9 @@ class EditClientForm(forms.ModelForm):
         self.fields["street"].label = "Ulica"
         self.fields["number"].label = "Numer lokalu"
         self.fields["zip_code"].label = "Kod pocztowy"
+        self.fields["zip_code"].widget = forms.TextInput(
+            attrs={"class": "form-control", "onkeyup": "enableGeocoding()"}
+        )
         self.fields["city"].label = "Miasto"
         self.fields["latitude"].label = "Szerokość geograficzna"
         self.fields["latitude"].widget = forms.NumberInput(

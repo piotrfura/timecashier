@@ -95,12 +95,21 @@ function getLocation(){
    };
 };
 
-async function geoCodeAddress(address){
+
+function enableGeocoding() {
+	 if(document.getElementById("id_zip_code").value==="") {
+            document.getElementById('btn-geocoding').disabled = true;
+        } else {
+            document.getElementById('btn-geocoding').disabled = false;
+        }
+};
+
+
+async function geoCodeAddress(){
     let country = 'pl';
     let postalcode = $('#id_zip_code').val();
 //    let street = $('#id_street').val() + ' ' + $('#id_number').val();
 //    let city = $('#id_city').val();
-    console.log(postalcode)
     geoLocationiqURL = 'https://eu1.locationiq.com/v1/search.php?format=json&key=pk.93625210f7120f17465e71ab649858a3'
                         + '&countrycodes=' + country + '&postalcode=' + postalcode;
     try {

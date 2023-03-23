@@ -31,12 +31,7 @@
         <input type="submit" class="btn btn-time-delete rounded-pill w-100" value="USUŃ"/>
     </form>
 </div>
-<div class="container col col-md-6 justify-content-center panel-background">
-    <button type="button" class="btn btn-light rounded-pill w-100" onclick="geoCodeAddress('12-220')">Ustal na podstawie adresu</button>
-</div>
-<div class="container col col-md-6 justify-content-center panel-background">
-    <button type="button" class="btn btn-light rounded-pill w-100" onclick="getLocation()">Ustaw bieżącą lokalizację</button>
-</div>
+
 <!--{% if client_rates %}-->
 <!--<table>-->
 <!--    <tr>-->
@@ -52,11 +47,30 @@
 <!--</table>-->
 <!--{% endif %}-->
 {% endif %}
+
+<div class="container col col-md-6 justify-content-center panel-background">
+    {% if client_details.zip_code %}
+    <button id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
+    {% else %}
+    <button disabled id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
+    {% endif %}
+</div>
+
+
+<div class="container col col-md-6 justify-content-center panel-background">
+    <button type="button" class="btn btn-light rounded-pill w-100" onclick="getLocation()">Ustaw bieżącą lokalizację</button>
+</div>
 <br>
 <div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>
 {% endblock %}
 
 {% block additional_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+$(document).ready(function(){
+  $('#id_zip_code').mask('00-000');
+});
+</script>
 <script src="{% static 'entries/js/main.js' %}"></script>
 <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxd_FDKWmoBx_ywEXflRnkmjHArAwnZ6E">
