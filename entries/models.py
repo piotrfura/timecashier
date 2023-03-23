@@ -42,6 +42,10 @@ class Timestamped(models.Model, ChceckAgeMixin):
 
 class Client(Timestamped):
     name = models.CharField(max_length=100)
+    street = models.CharField(max_length=100, blank=True, null=True)
+    number = models.CharField(max_length=10, blank=True, null=True)
+    zip_code = models.CharField(max_length=6, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
     latitude = models.DecimalField(max_digits=10, decimal_places=7)
     longitude = models.DecimalField(max_digits=10, decimal_places=7)
     user = models.ForeignKey(

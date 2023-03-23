@@ -113,7 +113,17 @@ class EditEntryForm(forms.ModelForm):
 class EditClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ["name", "latitude", "longitude", "inactive", "logo"]
+        fields = [
+            "name",
+            "street",
+            "number",
+            "zip_code",
+            "city",
+            "latitude",
+            "longitude",
+            "inactive",
+            "logo",
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -121,6 +131,10 @@ class EditClientForm(forms.ModelForm):
         self.helper.form_method = "post"
         self.helper.form_action = ""
         self.fields["name"].label = "Nazwa"
+        self.fields["street"].label = "Ulica"
+        self.fields["number"].label = "Numer lokalu"
+        self.fields["zip_code"].label = "Kod pocztowy"
+        self.fields["city"].label = "Miasto"
         self.fields["latitude"].label = "Szerokość geograficzna"
         self.fields["latitude"].widget = forms.NumberInput(
             attrs={"step": 0.0000001, "max": 90.0000000, "min": -90.0000000}
@@ -133,6 +147,10 @@ class EditClientForm(forms.ModelForm):
             Div(
                 Div(
                     FloatingField("name"),
+                    FloatingField("street"),
+                    FloatingField("number"),
+                    FloatingField("zip_code"),
+                    FloatingField("city"),
                     FloatingField("latitude"),
                     FloatingField("longitude"),
                     "logo",
