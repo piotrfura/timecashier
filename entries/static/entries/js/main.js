@@ -116,7 +116,7 @@ async function geoCodeAddress(){
         const response = await fetch(geoLocationiqURL, {referrerPolicy: "origin"});
         const data = await response.json();
 
-        if (data.length > 0) {
+        if (response.ok && data.length > 0) {
           let latitude = +(data[0].lat);
           let longitude = +(data[0].lon);
           latitude.toFixed(7);
@@ -128,7 +128,11 @@ async function geoCodeAddress(){
           if (document.getElementById('map')) {
                     initMap(latitude, longitude)
             };
-        } else {
+        }
+        else {
+          window.alert("Niestety nie mogę znaleźć lokalizacji dla kodu " + postalcode
+          + ".\nSprawdź czy kod pocztowy jest poprawny.\n"
+          + "[" + data.error + "]");
           throw new Error("No results found.");
     }
   } catch (error) {
