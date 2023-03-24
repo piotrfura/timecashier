@@ -12,15 +12,36 @@
 
 {% load l10n %}
 
+
 {% if client_details %}
+
 <h1>Edycja klienta</h1>
 <div style="text-align: center; margin-top:30px; margin-bottom:30px">
     <span>Utworzono: {{ client_details.created}}<br>Zmodyfikowano: {{ client_details.modified}}</span>
 </div>
 <p></p>
+
 {% else %}
 <h1>Dodaj klienta</h1>
 {% endif %}
+
+<div class="container col col-md-6 justify-content-center panel-background mb-2">
+    <button type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="getLocation()">Ustaw bieżącą lokalizację (domyślnie)</button>
+<!--</div>-->
+<!--<div class="container col col-md-6 justify-content-center panel-background m-1">-->
+    {% if client_details.zip_code %}
+    <button id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
+    {% else %}
+    <button disabled id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
+    {% endif %}
+<!--</div>-->
+<!--<div class="container col col-md-6 justify-content-center panel-background m-1">-->
+    <button type="button" class="btn btn-light rounded-pill w-100 my-2" data-bs-toggle="modal" data-bs-target="#modal-current-location">
+      Sprawdź na mapie i dostosuj
+    </button>
+</div>
+
+
 
 {% crispy form  %}
 
@@ -48,20 +69,22 @@
 <!--{% endif %}-->
 {% endif %}
 
-<div class="container col col-md-6 justify-content-center panel-background">
-    {% if client_details.zip_code %}
-    <button id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
-    {% else %}
-    <button disabled id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
-    {% endif %}
-</div>
 
-
-<div class="container col col-md-6 justify-content-center panel-background">
-    <button type="button" class="btn btn-light rounded-pill w-100" onclick="getLocation()">Ustaw bieżącą lokalizację</button>
+<!--<br>-->
+<!--<div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>-->
+<div class="modal fade" id="modal-current-location" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Przesuń znacznik na mapie</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>
+      </div>
+    </div>
+  </div>
 </div>
-<br>
-<div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>
 {% endblock %}
 
 {% block additional_scripts %}
