@@ -130,9 +130,9 @@ async function geoCodeAddress(){
             };
         }
         else {
-          window.alert("Niestety nie mogę wyznaczyć lokalizacji."
+          window.alert("Niestety nie mogę wyznaczyć lokalizacji.\n"
           + "\nSprawdź czy kod pocztowy, który wpisałeś [" + postalcode + "] jest poprawny.\n\n"
-          + "[" + data.error + "]");
+          + "'" + data.error + "'");
           throw new Error("No results found.");
     }
   } catch (error) {
