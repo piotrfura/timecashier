@@ -113,7 +113,7 @@ async function geoCodeAddress(){
     geoLocationiqURL = 'https://eu1.locationiq.com/v1/search.php?format=json&key=pk.93625210f7120f17465e71ab649858a3'
                         + '&countrycodes=' + country + '&postalcode=' + postalcode;
     try {
-        const response = await fetch(geoLocationiqURL);
+        const response = await fetch(geoLocationiqURL, {referrerPolicy: "origin"});
         const data = await response.json();
 
         if (data.length > 0) {
