@@ -26,22 +26,16 @@
 {% endif %}
 
 <div class="container col col-md-6 justify-content-center panel-background mb-2">
-    <button type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="getLocation()">Ustaw bieżącą lokalizację (domyślnie)</button>
-<!--</div>-->
-<!--<div class="container col col-md-6 justify-content-center panel-background m-1">-->
-    {% if client_details.zip_code %}
-    <button id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
-    {% else %}
-    <button disabled id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
-    {% endif %}
-<!--</div>-->
-<!--<div class="container col col-md-6 justify-content-center panel-background m-1">-->
-    <button type="button" class="btn btn-light rounded-pill w-100 my-2" data-bs-toggle="modal" data-bs-target="#modal-current-location">
-      Sprawdź na mapie i dostosuj
-    </button>
+        <button type="button" class="btn btn-light rounded-pill w-100 my-2" data-bs-toggle="modal" data-bs-target="#modal-location-map">
+          Pokaż mapę
+        </button>
+
+        {% if client_details.zip_code %}
+        <button id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
+        {% else %}
+        <button disabled id="btn-geocoding" type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="geoCodeAddress()">Ustal na podstawie kodu pocztowego</button>
+        {% endif %}
 </div>
-
-
 
 {% crispy form  %}
 
@@ -72,7 +66,7 @@
 
 <!--<br>-->
 <!--<div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>-->
-<div class="modal fade" id="modal-current-location" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modal-location-map" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -80,6 +74,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+          <button type="button" class="btn btn-light rounded-pill w-100 my-2" onclick="getLocation()">Ustaw bieżącą lokalizację</button>
+
         <div id="map" style="width:100%;height:500px" class="container col col-md-6 justify-content-center panel-background"></div>
       </div>
     </div>

@@ -126,7 +126,8 @@ async function geoCodeAddress(){
           $('#id_longitude').val(longitude);
 
           if (document.getElementById('map')) {
-                    initMap(latitude, longitude)
+                    initMap(latitude, longitude);
+                    $('#modal-location-map').modal('show');
             };
         }
         else {
