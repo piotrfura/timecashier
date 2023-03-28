@@ -10,17 +10,10 @@
 
 {% block title%}Profil - {% endblock %}
 {% block page_content %}
-<!--<h1>Profil użytkownika</h1>-->
+<h1>Profil użytkownika</h1>
 
-<div class="d-flex bd-highlight">
-    <div class="p-2 flex-shrink-1 bd-highlight">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-          <a class="nav-link {% if request.resolver_match.url_name == 'account_change_password' %}active{% endif %}" id="v-pills-home-tab" data-toggle="pill" href="{% url 'account_change_password' %}" role="tab" aria-controls="v-pills-home" aria-selected="true">Zmień hasło</a>
-        </div>
-    </div>
-    <div class="p-2 flex-grow-1 bd-highlight">
-        {% block profile_content %}{% endblock %}
-    </div>
-</div>
+<a href="{% url 'account_change_password' %}">
+    <button class="btn btn-time-primary">Zmień hasło</button>
+</a>
 
 {% endblock %}

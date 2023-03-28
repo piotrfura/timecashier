@@ -15,15 +15,11 @@ def index(request):
 
 
 def profile(request):
-    change_password_form = ChangePasswordForm()
-    context = {
-        "change_password_form": change_password_form,
-    }
+    context = {}
     return render(request, "main/profile.html", context)
 
 
 class PasswordChangeView(PasswordChangeView):
-    template_name = "main/profile.html"
     success_url = reverse_lazy("main:profile")
 
     def get_context_data(self, **kwargs):
