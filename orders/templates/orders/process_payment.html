@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Płatność -{% endblock %}
+
+{% block page_content %}
+<h1>Podsumowanie zakupu</h1>
+<div class="container col col-md-6 justify-content-center text-center">
+    <h4>Zamówienie nr {{ order.id }}</h4>
+    <p class="text-center">Pakiet: {{ order.product.name }}</p>
+    <p class="text-center">Cena: {{ order.product.price }} PLN miesięcznie</p>
+    {{ payment_form.render }}
+</div>
+{% endblock %}

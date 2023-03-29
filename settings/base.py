@@ -46,11 +46,13 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "axes",
+    "paypal.standard.ipn",
 ]
 LOCAL_APPS = [
     "main.apps.MainConfig",
     "entries.apps.EntriesConfig",
     "tags.apps.TagsConfig",
+    "orders.apps.OrdersConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -267,3 +269,10 @@ ACCOUNT_FORMS = {
 }
 
 ACCOUNT_SESSION_REMEMBER = True
+
+# PAYPAL
+PAYPAL_TEST = env("PAYPAL_TEST", default=False)
+PAYPAL_RECEIVER_EMAIL = env(
+    "PAYPAL_RECEIVER_EMAIL",
+)
+PAYPAL_BUY_BUTTON_IMAGE = "https://www.paypalobjects.com/pl_PL/i/btn/btn_buynow_LG.gif"
