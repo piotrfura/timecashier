@@ -49,7 +49,7 @@ def payment_notification(sender, **kwargs):
         id = ipn_obj.custom
         user = User.objects.get(id=id)
         # user.extend()  # extend the subscription
-        order = Order.objects.get(ipn_obj.invoice)
+        order = Order.objects.get(pk=ipn_obj.invoice)
         order.active = True
         order.last_payment = datetime.now()
         order.save()
