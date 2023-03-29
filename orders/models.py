@@ -8,6 +8,8 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    billing_cycle = models.SmallIntegerField(default=1)
+    billing_cycle_unit = models.CharField(max_length=1, default="M")
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
@@ -29,7 +31,8 @@ class Order(models.Model):
         Organization, on_delete=models.CASCADE, related_name="orders"
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
-    paid = models.BooleanField(default=False)
+    active = models.BooleanField(default=False)
+    last_payment = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ("-created",)

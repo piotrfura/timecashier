@@ -61,8 +61,14 @@ def process_payment(request):
     order = get_object_or_404(Order, pk=order_id)
 
     paypal_dict = {
+        "cmd": "_xclick-subscriptions",
         "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": f"{order.product.price:.2f}",
+        "a3": f"{order.product.price:.2f}",
+        "p3": order.product.billing_cycle,
+        "t3": order.product.billing_cycle_unit,
+        "src": "1",  # make payments recur
+        "sra": "1",  # reattempt payment on payment error
+        "no_note": "1",  # remove extra notes (optional)
         "currency_code": "PLN",
         "item_name": "TimeCashier " + order.product.name,
         "invoice": str(order.pk),
@@ -71,7 +77,7 @@ def process_payment(request):
         "cancel_return": request.build_absolute_uri(
             reverse("orders:payment_cancelled")
         ),
-        "custom": get_user_org(request).pk,
+        "custom": request.user.pk,
     }
 
     payment_form = CustomPayPalPaymentsForm(initial=paypal_dict)
