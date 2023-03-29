@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Zamówienie -{% endblock %}
+
+{% block page_content %}
+    <h1>Zamówienie</h1>
+<div class="text-center">
+    <h4>Pakiet: {{ order.product.name }}</h4>
+    <h5>{{ order.product.price }} PLN miesięcznie</h5>
+</div>
+    {% crispy order_form %}
+{% endblock %}
+
+{% block additional_scripts %}
+<script>
+    $("#id_business").change( function(){
+    if($(id_business).is(':checked')) {
+        $(id_tax_no).prop("hidden", false)
+        $(id_tax_no).prop("required", true)
+    } else {
+        $(id_tax_no).prop("hidden", true)
+        $(id_tax_no).prop("required", false)
+    }
+});
+</script>
+{% endblock %}

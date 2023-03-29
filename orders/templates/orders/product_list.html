@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div class="d-flex flex-column vh-100 justify-content-center">
+<div class="row align-items-center">
+
+
+    {% for product in products %}
+      <div class="col-sm-6">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <h6 class="card-subtitle">{{ product.price }} PLN miesięcznie</h6>
+            <p class="card-text text-center">{{ product.description }}</p>
+              <form action="{% url 'orders:add_to_order' pk=product.pk %}" method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-time-primary" value="Wybierz"/>
+            </form>
+          </div>
+        </div>
+        </div>
+<!--        <div class="product">-->
+<!--            <h3>{{ product.name }}</h3>-->
+<!--            <p>{{ product.description }}</p>-->
+<!--            <p>Cena: {{ product.price }} PLN miesięcznie</p>-->
+<!--            <form action="{% url 'orders:add_to_order' pk=product.pk %}" method="post">-->
+<!--            {% csrf_token %}-->
+<!--            <input type="submit" class="submit_btn btn label-success" value="Wybierz"/>-->
+<!--            </form>-->
+<!--        </div>-->
+    {% empty %}
+        <p>Brak produktów.</p>
+    {% endfor %}
+</div>
+{% endblock %}

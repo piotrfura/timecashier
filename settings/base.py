@@ -51,6 +51,7 @@ LOCAL_APPS = [
     "main.apps.MainConfig",
     "entries.apps.EntriesConfig",
     "tags.apps.TagsConfig",
+    "orders.apps.OrdersConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
