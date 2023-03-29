@@ -22,7 +22,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "user",
-        "paid",
+        "active",
+        "last_payment",
         "product",
         "created",
         "modified",
