@@ -87,7 +87,12 @@ def process_payment(request):
 
 @csrf_exempt
 def payment_done(request):
-    messages.success(request, "Zamówienie zostało opłacone. Dziękujemy za zakup!")
+    messages.success(
+        request,
+        "Dziękujemy za złożenie zamówienia! "
+        + "Po potwierdzeniu płatności Twój dostęp zostanie aktywowany. "
+        + "Potwierdzenie otrzymasz na adres mailowy w ciągu kilku minut.",
+    )
     return HttpResponseRedirect(reverse("main:profile"))
 
 

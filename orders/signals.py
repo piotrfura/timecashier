@@ -32,9 +32,9 @@ def payment_notification(sender, **kwargs):
             subject = "Potwierdzenie subskrypcji Timecashier {{ order.product.name }}"
 
             message = (
-                "Dziękujemy za opłacenie subskrypcji planu Timecashier {{ order.product.name }}!"
-                "Twój dostęp jest już aktywny."
-                "Zapraszamy do korzystania z portalu."
+                "Dziękujemy za opłacenie subskrypcji planu Timecashier "
+                + {{order.product.name}}
+                + " !/nTwój dostęp jest już aktywny./nZapraszamy do korzystania z portalu TimeCashier.pl"
             )
 
             email = EmailMessage(
