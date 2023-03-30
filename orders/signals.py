@@ -29,17 +29,17 @@ def payment_notification(sender, **kwargs):
             order.last_payment = datetime.now()
             order.save()
 
-            subject = "Potwierdzenie subskrypcji Timecashier {{ order.product.name }}"
+            subject = f"Potwierdzenie subskrypcji Timecashier {order.product.name}"
 
             message = (
-                "Dziękujemy za opłacenie subskrypcji planu Timecashier "
-                + {{order.product.name}}
-                + " !/nTwój dostęp jest już aktywny./nZapraszamy do korzystania z portalu TimeCashier.pl"
+                f"Dziękujemy za opłacenie subskrypcji planu Timecashier {order.product.name}",
+                "\nTwój dostęp jest już aktywny."
+                "\nZapraszamy do korzystania z portalu TimeCashier.pl",
             )
 
             email = EmailMessage(
                 subject,
-                message,
+                "".join(message),
                 "TimeCashier.pl <noreply@timecashier.pl>",
                 [user.email],
             )
