@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.conf import settings
 from django.contrib import messages
@@ -20,6 +21,8 @@ from .models import PayPalSubscription
 from .models import Product
 from entries.views import get_user_org
 from orders.paypal.restapi import create_subscription
+
+logger = logging.getLogger(__name__)
 
 
 def product_list(request):
@@ -147,9 +150,12 @@ def paypal_hook(request):
         obj = json.loads(request.body)
         event_type = obj.get("event_type")
         resource = obj.get("resource")
+        logger.info(event_type, resource)
         if event_type == "PAYMENT.SALE.COMPLETED":
-            sub = PayPalSubscription.objects.get(subscription_id=resource["billing_agreement_id"])
+            sub = PayPalSubscription.objects.get(
+                subscription_id=resource["billing_agreement_id"]
+            )
             sub.status = resource["state"]
             sub.save()
-            print(f"subscription {resource['billing_agreement_id']} paid")
+            logger.info(f"subscription {resource['billing_agreement_id']} paid")
     return HttpResponse(status=200)
