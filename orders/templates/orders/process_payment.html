@@ -10,6 +10,6 @@
     <h4>Zamówienie nr {{ order.id }}</h4>
     <p class="text-center">Pakiet: {{ order.product.name }}</p>
     <p class="text-center">Cena: {{ order.product.price }} PLN miesięcznie</p>
-    {{ payment_form.render }}
+    <a href="{{ approve_url }}"><div class="btn-time-primary rounded-pill w-100">Zamawiam</div></a>
 </div>
 {% endblock %}

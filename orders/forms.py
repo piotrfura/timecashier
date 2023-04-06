@@ -4,7 +4,6 @@ from crispy_forms.layout import Div
 from crispy_forms.layout import Layout
 from crispy_forms.layout import Submit
 from django import forms
-from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import OrderCustomer
 
@@ -72,8 +71,3 @@ class OrderCreateForm(forms.ModelForm):
                 css_class="container col col-md-6 justify-content-center panel-background shadow",
             )
         )
-
-
-class CustomPayPalPaymentsForm(PayPalPaymentsForm):
-    def get_html_submit_element(self):
-        return """<button type="submit">Zapłać za pomocą PayPal</button>"""

@@ -58,3 +58,37 @@ class OrderCustomer(models.Model):
 
     def __str__(self):
         return f"Customer {self.id}"
+
+
+class PayPalProduct(models.Model):
+    paypal_id = models.CharField(max_length=100)
+    paypal_name = models.CharField(max_length=255)
+    paypal_description = models.TextField(null=True, blank=True)
+    paypal_create_time = models.CharField(max_length=100)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="paypal_product"
+    )
+
+    def __str__(self):
+        return f"{self.product.pk} {self.product.name} {self.paypal_id}"
+
+
+class PayPalPlan(models.Model):
+    plan_id = models.CharField(max_length=100)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="paypal_plan"
+    )
+
+    def __str__(self):
+        return f"Plan {self.product.pk} {self.product.name} {self.plan_id}"
+
+
+class PayPalSubscription(models.Model):
+    subscription_id = models.CharField(max_length=100)
+    plan = models.ForeignKey(
+        PayPalPlan, on_delete=models.CASCADE, related_name="paypal_subscription"
+    )
+    status = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"Subscription {self.subscription_id} {self.plan.plan_id} {self.plan.product.name} {self.status}"

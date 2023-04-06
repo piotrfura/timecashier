@@ -9,3 +9,4 @@ timecashier.db
 media/
 logs/
 .env
+push_prod.sh
