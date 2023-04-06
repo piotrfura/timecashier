@@ -1,5 +1,9 @@
+import json
+
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -7,12 +11,15 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from paypalrestsdk.notifications import WebhookEvent
 
-from .forms import CustomPayPalPaymentsForm
 from .forms import OrderCreateForm
 from .models import Order
+from .models import PayPalPlan
+from .models import PayPalSubscription
 from .models import Product
 from entries.views import get_user_org
+from orders.paypal.restapi import create_subscription
 
 
 def product_list(request):
@@ -40,6 +47,40 @@ def order_submit(request, pk):
             order_customer.order = order
             order_customer.save()
             request.session["order_id"] = order.pk
+
+            plan = PayPalPlan.objects.get(product=order.product)
+
+            paypal_dict = {
+                "plan_id": plan.plan_id,
+                "subscriber": {
+                    "name": {"given_name": order_customer.name, "surname": ""},
+                    "email_address": order_customer.email,
+                },
+                "application_context": {
+                    "brand_name": "TimeCashier.pl",
+                    "user_action": "SUBSCRIBE_NOW",
+                    "payment_method": {
+                        "payer_selected": "PAYPAL",
+                        "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED",
+                    },
+                    "return_url": request.build_absolute_uri(
+                        reverse("orders:payment_done")
+                    ),
+                    "cancel_url": request.build_absolute_uri(
+                        reverse("orders:payment_cancelled")
+                    ),
+                },
+            }
+
+            api_response = create_subscription(**paypal_dict)
+            approve_url = api_response["links"][0]["href"]
+            request.session["approve_url"] = approve_url
+            sub = PayPalSubscription(
+                subscription_id=api_response["id"],
+                plan=plan,
+                status=api_response["status"],
+            )
+            sub.save()
             return HttpResponseRedirect(reverse("orders:process_payment"))
     else:
         order_form = OrderCreateForm(
@@ -54,35 +95,6 @@ def order_submit(request, pk):
         "orders/order_submit.html",
         {"order": order, "order_form": order_form, "user": user},
     )
-
-
-def process_payment(request):
-    order_id = request.session.get("order_id")
-    order = get_object_or_404(Order, pk=order_id)
-
-    paypal_dict = {
-        "cmd": "_xclick-subscriptions",
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "a3": f"{order.product.price:.2f}",
-        "p3": order.product.billing_cycle,
-        "t3": order.product.billing_cycle_unit,
-        "src": "1",  # make payments recur
-        "sra": "1",  # reattempt payment on payment error
-        "no_note": "1",  # remove extra notes (optional)
-        "currency_code": "PLN",
-        "item_name": "TimeCashier " + order.product.name,
-        "invoice": str(order.pk),
-        "notify_url": request.build_absolute_uri(reverse("paypal-ipn")),
-        "return": request.build_absolute_uri(reverse("orders:payment_done")),
-        "cancel_return": request.build_absolute_uri(
-            reverse("orders:payment_cancelled")
-        ),
-        "custom": request.user.pk,
-    }
-
-    payment_form = CustomPayPalPaymentsForm(initial=paypal_dict)
-    context = {"order": order, "payment_form": payment_form}
-    return render(request, "orders/process_payment.html", context)
 
 
 @csrf_exempt
@@ -100,3 +112,45 @@ def payment_done(request):
 def payment_canceled(request):
     messages.error(request, "Płatność została anulowana. Spróbuj ponownie.")
     return HttpResponseRedirect(reverse("orders:process_payment"))
+
+
+@login_required
+def process_payment(request):
+    order_id = request.session.get("order_id")
+    order = get_object_or_404(Order, pk=order_id)
+
+    approve_url = request.session.get("approve_url")
+
+    context = {"order": order, "approve_url": approve_url}
+    return render(request, "orders/process_payment.html", context)
+
+
+@csrf_exempt
+def paypal_hook(request):
+    transmission_id = request.headers["Paypal-Transmission-Id"]
+    timestamp = request.headers["Paypal-Transmission-Time"]
+    webhook_id = settings.PAYPAL_WEBHOOK_ID
+    event_body = request.body.decode("utf-8")
+    cert_url = request.headers["Paypal-Cert-Url"]
+    auth_algo = request.headers["Paypal-Auth-Algo"]
+    actual_signature = request.headers["Paypal-Transmission-Sig"]
+    response = WebhookEvent.verify(
+        transmission_id,
+        timestamp,
+        webhook_id,
+        event_body,
+        cert_url,
+        actual_signature,
+        auth_algo,
+    )
+    if response:
+        obj = json.loads(request.body)
+        event_type = obj.get("event_type")
+        resource = obj.get("resource")
+        print(resource)
+        if event_type == "PAYMENT.SALE.COMPLETED":
+            # sub = PayPalSubscription.objects.get(subscription_id=)
+            # sub.status = 'paid'
+            # sub.save()
+            print("subscription_paid")
+    return HttpResponse(status=200)
