@@ -149,8 +149,8 @@ def paypal_hook(request):
         resource = obj.get("resource")
         print(resource)
         if event_type == "PAYMENT.SALE.COMPLETED":
-            # sub = PayPalSubscription.objects.get(subscription_id=)
-            # sub.status = 'paid'
-            # sub.save()
+            sub = PayPalSubscription.objects.get(subscription_id=obj["id"])
+            sub.status = obj["status"]
+            sub.save()
             print("subscription_paid")
     return HttpResponse(status=200)
