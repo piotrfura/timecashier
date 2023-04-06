@@ -147,10 +147,9 @@ def paypal_hook(request):
         obj = json.loads(request.body)
         event_type = obj.get("event_type")
         resource = obj.get("resource")
-        print(resource)
         if event_type == "PAYMENT.SALE.COMPLETED":
-            sub = PayPalSubscription.objects.get(subscription_id=obj["id"])
-            sub.status = obj["status"]
+            sub = PayPalSubscription.objects.get(subscription_id=resource["billing_agreement_id"])
+            sub.status = resource["state"]
             sub.save()
-            print("subscription_paid")
+            print(f"subscription {resource['billing_agreement_id']} paid")
     return HttpResponse(status=200)
