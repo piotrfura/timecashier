@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from datetime import timedelta
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
@@ -96,6 +97,7 @@ def home(request):
         "form": form,
         "active_entry": active_entry,
         "entries_json": entries_json,
+        "google_api_key": settings.GOOGLE_MAPS_API_KEY,
     }
 
     return render(request, "entries/home.html", context)
@@ -254,6 +256,7 @@ def client_edit(request, client_id):
         "client_lat": client.latitude,
         "client_long": client.longitude,
         "client_link": client_link,
+        "google_api_key": settings.GOOGLE_MAPS_API_KEY,
     }
     return render(request, "entries/client_edit.html", context)
 
