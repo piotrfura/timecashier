@@ -1,0 +1,22 @@
+services:
+  timecashier:
+    volumes:
+      - ./static:/app/static
+    env_file:
+      - .env.prod
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db_timecashier
+  db_timecashier:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.db
+    ports:
+      - "5432:5432"
+volumes:
+  postgres_data:

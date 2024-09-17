@@ -8,6 +8,6 @@ timecashier.db
 *db.json
 media/
 logs/
-.env
+.env*
 push_prod.sh
 
