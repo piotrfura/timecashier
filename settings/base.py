@@ -70,7 +70,7 @@ AXES_FAILURE_LIMIT = 10
 AXES_LOCKOUT_CALLABLE = "main.views.lockout"
 
 # solves production problem with ip address forwarding from http server
-AXES_META_PRECEDENCE_ORDER = [
+AXES_META_PRECEDENCE = [
     "HTTP_X_FORWARDED_FOR",
     "REMOTE_ADDR",
 ]
@@ -89,6 +89,8 @@ MIDDLEWARE = [
     # If you do not want Axes to override the authentication response
     # you can skip installing the middleware and use your own views.
     "axes.middleware.AxesMiddleware",
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "timecashier.urls"

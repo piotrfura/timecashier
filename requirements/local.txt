@@ -1,13 +1,13 @@
 -r ./base.txt
 
-django-extensions==3.1.5
-django-debug-toolbar==3.7.0
-Faker==12.1.0
+django-extensions==3.2.3
+django-debug-toolbar==4.4.6
+Faker==28.4.1
 
 # Code quality
 # ------------------------------------------------------------------------------
-pylint-django==2.5.3 # https://github.com/PyCQA/pylint-django
-black==22.10.0  # https://github.com/ambv/black
-flake8==6.0.0  # https://github.com/PyCQA/flake8
-pre-commit==2.20.0  # https://github.com/pre-commit/pre-commit
+pylint-django==2.5.5 # https://github.com/PyCQA/pylint-django
+black==24.8.0  # https://github.com/ambv/black
+flake8==7.1.1  # https://github.com/PyCQA/flake8
+pre-commit==3.8.0  # https://github.com/pre-commit/pre-commit
 # coverage==5.3  # https://github.com/nedbat/coveragepy
